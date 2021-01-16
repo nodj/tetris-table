@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\tps\SerialPort-master\include\SerialPort.hpp">
+      <Filter>tps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\fmt-master\include\fmt\args.h">
+      <Filter>tps\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\fmt-master\include\fmt\chrono.h">
+      <Filter>tps\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\fmt-master\include\fmt\color.h">
+      <Filter>tps\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\fmt-master\include\fmt\compile.h">
+      <Filter>tps\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\fmt-master\include\fmt\core.h">
+      <Filter>tps\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\fmt-master\include\fmt\format.h">
+      <Filter>tps\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\fmt-master\include\fmt\format-inl.h">
+      <Filter>tps\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\fmt-master\include\fmt\locale.h">
+      <Filter>tps\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\fmt-master\include\fmt\os.h">
+      <Filter>tps\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\fmt-master\include\fmt\ostream.h">
+      <Filter>tps\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\fmt-master\include\fmt\posix.h">
+      <Filter>tps\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\fmt-master\include\fmt\printf.h">
+      <Filter>tps\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\fmt-master\include\fmt\ranges.h">
+      <Filter>tps\fmt</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SenderInterface.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SenderSerial.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\tps\fmt-master\src\format.cc">
+      <Filter>tps\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\tps\SerialPort-master\src\SerialPort.cpp">
+      <Filter>tps\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="tps">
+      <UniqueIdentifier>{3c64120d-e6a8-49c9-be2b-3c701240f925}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tps\fmt">
+      <UniqueIdentifier>{cccc2c53-867a-422b-b9bd-311a179fc08e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tps\src">
+      <UniqueIdentifier>{61fed080-f55d-43a4-9bc1-cab033ae2239}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{867cb7b4-81ac-4aa8-876d-8827a0174022}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
