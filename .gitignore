@@ -1,0 +1,12 @@
+# visual stuff
+*/.vs/
+*.user
+serial_cpp/console/Debug/
+serial_cpp/Debug/
+
+# tps
+serial_cpp/tps/Arduino-SerialCommand-master/
+serial_cpp/tps/fmt-master/
+serial_cpp/tps/SerialPort-master/
+serial_bin/workspace.code-workspace
+serial_bin/.vscode/c_cpp_properties.json
