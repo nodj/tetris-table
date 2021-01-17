@@ -2,11 +2,16 @@
 
 #pragma once
 
-#include "commands.h"
 #include "SenderInterface.h"
 
 #include <memory>
 
+
+struct Color_24b { 
+	uint8_t R = 127;
+	uint8_t G = 0;
+	uint8_t B = 0;
+};
 
 
 class RemoteDisplay
@@ -22,9 +27,6 @@ public:
 
 	void PrintSerialInput();
 	
-private:
-	void PushCommand(const Command& command);
-
 private:
 	std::unique_ptr<class SenderInterface> sender;
 };

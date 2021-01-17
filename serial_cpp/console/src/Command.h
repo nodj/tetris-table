@@ -6,9 +6,6 @@
 #include <vector>
 
 
-enum class CommandCode : uint8_t;
-
-
 class IOBuffer
 {
 public:
@@ -25,11 +22,14 @@ inline IOBuffer& IOBuffer::operator << (const uint8_t& arg)
 	buffer.push_back(arg);
 	return *this;
 }
-
 	
 
-struct Command
+
+enum class CommandCode : uint8_t;
+
+class Command
 {
+public:
 	virtual CommandCode GetCode() const = 0;
 	virtual void Visit(class IOBuffer& Buffer) {}
 };

@@ -34,7 +34,6 @@
     <ClInclude Include="..\tps\fmt-master\include\fmt\ranges.h" />
     <ClInclude Include="..\tps\SerialPort-master\include\SerialPort.hpp" />
     <ClInclude Include="src\Command.h" />
-    <ClInclude Include="src\commands.h" />
     <ClInclude Include="src\RemoteDisplay.h" />
     <ClInclude Include="src\SenderInterface.h" />
     <ClInclude Include="src\SenderSerial.h" />

@@ -27,6 +27,8 @@ SenderSerial::SenderSerial()
 	}
 }
 
+SenderSerial::~SenderSerial() = default;
+
 bool SenderSerial::CanSend()
 {
 	return isFine && Port && Port->isConnected();

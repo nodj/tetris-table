@@ -7,11 +7,13 @@
 #include <memory>
 
 
-class SenderSerial 
+// handle the serial communication with a remote.
+class SenderSerial
 	: public SenderInterface
 {
 public:
 	SenderSerial();
+	~SenderSerial();
 
 	virtual bool CanSend() override;
 

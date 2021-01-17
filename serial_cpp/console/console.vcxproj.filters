@@ -55,9 +55,6 @@
     <ClInclude Include="src\Command.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\commands.h">
-      <Filter>src</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\tps\fmt-master\src\format.cc">

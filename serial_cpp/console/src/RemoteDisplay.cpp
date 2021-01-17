@@ -2,9 +2,44 @@
 
 #include "RemoteDisplay.h"
 #include "SenderSerial.h"
-#include "SerialPort.hpp"
+#include "Command.h"
 
 #include "fmt/color.h"
+
+
+enum class CommandCode : uint8_t
+{
+	None          = 'a'-1,
+	Fill          = 'a',
+	LedBlink_void = 'b',
+	LedOn_void    = 'c',
+	LedOff_void   = 'd',
+	
+	_max
+};
+
+struct CommandFill : public Command
+{
+	Color_24b c;
+
+	CommandFill(const Color_24b& color) : c(color) {}
+	virtual CommandCode GetCode() const override final { return CommandCode::Fill; }
+	virtual void Visit(IOBuffer& Buffer) override final
+	{
+		Buffer << c.R << c.G << c.B;
+	}
+};
+
+struct CommandLedOff : public Command
+{
+	virtual CommandCode GetCode() const override final { return CommandCode::LedOff_void; }
+};
+
+struct CommandLedOn : public Command
+{
+	virtual CommandCode GetCode() const override final { return CommandCode::LedOn_void; }
+};
+
 
 
 
@@ -33,7 +68,7 @@ void RemoteDisplay::PrintSerialInput()
 	}
 }
 
-void RemoteDisplay::PushCommand(const Command& command)
+void PushCommand(std::unique_ptr<SenderInterface>& sender, const Command& command)
 {
 	IOBuffer ioBuffer;
 	ioBuffer.buffer.reserve(64);
@@ -56,6 +91,6 @@ void RemoteDisplay::PushCommand(const Command& command)
 
 void RemoteDisplay::Fill(const Color_24b& fillColor)
 {
-	PushCommand(CommandFill(fillColor));
+	PushCommand(sender, CommandFill(fillColor));
 }
 
