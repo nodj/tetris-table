@@ -2,48 +2,15 @@
 
 #include "RemoteDisplay.h"
 #include "SenderSerial.h"
+#include "SerialPort.hpp"
 
 #include "fmt/color.h"
 
-#include <thread>
-
-
-
-using Arduino = std::unique_ptr<SerialPort>;
-
-
-namespace detail 
-{
-
-
-std::unique_ptr<SenderInterface> scanSerialPort()
-{
-	for (int i = 0; i < 255; ++i)
-	{
-		fmt::print("scan com port {}:\n", i);
-
-		fmt::memory_buffer port;
-		format_to(port, "\\\\.\\COM{}", i);
-		BaudRate Rate = BaudRate::BR_9600;
-// 		BaudRate Rate = BaudRate(3000000);
-		Arduino arduino = std::make_unique<SerialPort>(port.data(), Rate);
-
-		if (bool isConnected = arduino->isConnected())
-		{
-			fmt::print("com port {} available!\n", i);
-			return std::make_unique<SenderSerial>(std::move(arduino));
-		}
-	}
-
-	return nullptr;
-}
-
-} // ns detail
 
 
 bool RemoteDisplay::Connect()
 {
-	sender = detail::scanSerialPort();
+	sender = std::make_unique<SenderSerial>();
 	return IsConnected();
 }
 
@@ -66,8 +33,29 @@ void RemoteDisplay::PrintSerialInput()
 	}
 }
 
+void RemoteDisplay::PushCommand(const Command& command)
+{
+	IOBuffer ioBuffer;
+	ioBuffer.buffer.reserve(64);
+	const_cast<Command&>(command).Visit(ioBuffer);
+
+	uint8_t header = '<';
+	sender->PushBuffer(&header, 1);
+
+	uint8_t code = (uint8_t)command.GetCode();
+	sender->PushBuffer(&code, 1);
+
+	uint16_t byteCount = static_cast<uint16_t>(ioBuffer.buffer.size());
+	sender->PushBuffer(&byteCount, 2);
+
+	sender->PushBuffer(ioBuffer.buffer.data(), byteCount);
+
+	uint8_t footer = '>';
+	sender->PushBuffer(&footer, 1);
+}
+
 void RemoteDisplay::Fill(const Color_24b& fillColor)
 {
-	sender->PushCommand(CommandFill(fillColor));
+	PushCommand(CommandFill(fillColor));
 }
 

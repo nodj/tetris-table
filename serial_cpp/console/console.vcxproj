@@ -44,6 +44,7 @@
     <ClCompile Include="..\tps\SerialPort-master\src\SerialPort.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\RemoteDisplay.cpp" />
+    <ClCompile Include="src\SenderSerial.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -1,11 +1,8 @@
 // johan.duparc
 
 #pragma once
+#include "Command.h"
 
-#include "SenderInterface.h"
-
-
-using ColorCode = uint8_t;
 
 struct Color_24b { 
 	uint8_t R = 127;

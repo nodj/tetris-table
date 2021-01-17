@@ -3,43 +3,25 @@
 #pragma once
 
 #include "SenderInterface.h"
-#include "SerialPort.hpp"
+
+#include <memory>
 
 
 class SenderSerial 
 	: public SenderInterface
 {
 public:
-	SenderSerial(std::unique_ptr<SerialPort>&& Port) 
-		: Port(std::move(Port))
-	{
-	}
+	SenderSerial();
 
-	virtual bool CanSend() override
-	{
-		return isFine && Port && Port->isConnected();
-	}
+	virtual bool CanSend() override;
 
-	virtual void PushBuffer(const void* buffer, uint32_t bufferLength) override
-	{
-		if (isFine = CanSend())
-		{
-			isFine = Port->writeSerialPort((uint8_t*)buffer, bufferLength);
-		}
-	}
+	virtual void PushBuffer(const void* buffer, uint32_t bufferLength) override;
 
-	virtual bool CanReceive() override
-	{
-		return true;
-	}
+	virtual bool CanReceive() override;
 
-	virtual int ReceiveBuffer(void* buffer, uint32_t bufferLength) override
-	{
-		memset(buffer, 0, bufferLength);
-		return Port->readSerialPort((uint8_t*)buffer, bufferLength);
-	}
+	virtual int ReceiveBuffer(void* buffer, uint32_t bufferLength) override;
 
 private:
 	bool isFine = true;
-	std::unique_ptr<SerialPort> Port;
+	std::unique_ptr<class SerialPort> Port;
 };

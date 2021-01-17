@@ -20,8 +20,11 @@ public:
 	
 	void Fill(const Color_24b& fillColor);
 
-
 	void PrintSerialInput();
+	
+private:
+	void PushCommand(const Command& command);
+
 private:
 	std::unique_ptr<class SenderInterface> sender;
 };
