@@ -49,6 +49,15 @@
     <ClInclude Include="src\SenderSerial.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\RemoteDisplay.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Command.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\commands.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\tps\fmt-master\src\format.cc">
@@ -58,6 +67,9 @@
       <Filter>tps\src</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RemoteDisplay.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

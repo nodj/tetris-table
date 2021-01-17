@@ -3,6 +3,7 @@
 #pragma once
 
 #include "SenderInterface.h"
+#include "SerialPort.hpp"
 
 
 class SenderSerial 
@@ -19,7 +20,7 @@ public:
 		return isFine && Port && Port->isConnected();
 	}
 
-	virtual void SendBuffer(const void* buffer, uint32_t bufferLength) override
+	virtual void PushBuffer(const void* buffer, uint32_t bufferLength) override
 	{
 		if (isFine = CanSend())
 		{

@@ -33,6 +33,9 @@
     <ClInclude Include="..\tps\fmt-master\include\fmt\printf.h" />
     <ClInclude Include="..\tps\fmt-master\include\fmt\ranges.h" />
     <ClInclude Include="..\tps\SerialPort-master\include\SerialPort.hpp" />
+    <ClInclude Include="src\Command.h" />
+    <ClInclude Include="src\commands.h" />
+    <ClInclude Include="src\RemoteDisplay.h" />
     <ClInclude Include="src\SenderInterface.h" />
     <ClInclude Include="src\SenderSerial.h" />
   </ItemGroup>
@@ -40,6 +43,7 @@
     <ClCompile Include="..\tps\fmt-master\src\format.cc" />
     <ClCompile Include="..\tps\SerialPort-master\src\SerialPort.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\RemoteDisplay.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
