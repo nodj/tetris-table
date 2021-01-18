@@ -8,6 +8,8 @@
 
 
 // handle the serial communication with a remote.
+// todo: handle packet splitting, acknowlegment, etc
+// todo: handle answer reconbination
 class SenderSerial
 	: public SenderInterface
 {
