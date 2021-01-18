@@ -1,9 +1,12 @@
-
-#include "Arduino.h"
+// johan.duparc
 
 #pragma once
 
+#include <Arduino.h>
 
+#include "common.h"
+
+// #todo: move this in a file shared by both plateforms
 enum CommandCode : uint8_t
 {
 	None          = 'a'-1,
@@ -11,14 +14,11 @@ enum CommandCode : uint8_t
 	LedBlink_void = 'b',
 	LedOn_void    = 'c',
 	LedOff_void   = 'd',
-
 	CommandCode_max
 };
 
 
 void ProcessInputSerialStream();
-
-void ProcessCommand(uint8_t CommandCode);
 
 
 struct CommandInfo
@@ -27,5 +27,23 @@ struct CommandInfo
 	uint8_t* commandBuffer = nullptr;
 	uint32_t commandBufferSize = 0;
 };
+
 bool GetCommandInfo(CommandInfo& ci);
 void ClearCurrentCommand();
+
+// specific to this project
+struct FillCmd
+{
+	Color_24b color;
+
+	FillCmd(const CommandInfo& ci)
+	{
+		if (ci.commandBufferSize >= 3)
+		{
+			color.R = ci.commandBuffer[0];
+			color.G = ci.commandBuffer[1];
+			color.B = ci.commandBuffer[2];
+		}
+	}
+};
+

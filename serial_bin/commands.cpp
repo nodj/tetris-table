@@ -1,11 +1,13 @@
-#include "lib.h"
+// johan.duparc
+
+#include "commands.h"
 
 
 
 ///////////////////////////////////////////////////////////////
 bool parseOk = true;
 
-void ReadNext(uint16_t& u16, int& available)
+void SerialReadNext(uint16_t& u16, int& available)
 {
 	uint8_t lo = Serial.read();
 	uint8_t hi = Serial.read();
@@ -14,7 +16,7 @@ void ReadNext(uint16_t& u16, int& available)
 	parseOk &= available >= 0;
 }
 
-void ReadNext(uint8_t& u8, int& available)
+void SerialReadNext(uint8_t& u8, int& available)
 {
 	u8 = Serial.read();
 	available -= 1;
@@ -30,8 +32,8 @@ struct Header
 		if (available < 4)
 			return false;
 		Serial.read();
-		ReadNext(commandCode, available);
-		ReadNext(commandSize, available);
+		SerialReadNext(commandCode, available);
+		SerialReadNext(commandSize, available);
 		return true;
 	}
 	uint16_t commandSize;
@@ -126,6 +128,7 @@ void ProcessInputSerialStream()
 						{
 							ParsingState = CommandParsingState::BufferOk;
 						}
+						return ProcessInputSerialStream();
 					}
 				}
 				break;
@@ -133,7 +136,7 @@ void ProcessInputSerialStream()
 
 			case CommandParsingState::HeaderOk:
 			{
-				Serial.println("== CommandParsingState::HeaderOk");
+				Serial.println("HeaderOk");
 				Serial.print("h.cc:");
 				Serial.println(CurrentHeader.commandCode);
 				Serial.print("h.bs:");
@@ -142,13 +145,14 @@ void ProcessInputSerialStream()
 				if (commandBufferSize == commandBufferWrote)
 				{
 					ParsingState = CommandParsingState::BufferOk;
+					return ProcessInputSerialStream();
 				}
 				break;
 			}
 
 			case CommandParsingState::BufferOk:
 			{
-				Serial.println("== CommandParsingState::BufferOk");
+				Serial.println("BufferOk");
 				if (available)
 				{
 					uint8_t closure = Serial.read();
@@ -156,6 +160,7 @@ void ProcessInputSerialStream()
 					{
 						Serial.println("== Command completed !");
 						ParsingState = CommandParsingState::CommandOk;
+						return ProcessInputSerialStream();
 					}
 				}
 				break;
@@ -164,7 +169,7 @@ void ProcessInputSerialStream()
 			case CommandParsingState::CommandOk:
 			{
 				// do nothing, wait for command to be consumed
-				Serial.println("== CommandParsingState::CommandOk");
+				Serial.println("CommandOk");
 				break;
 			}
 		}
