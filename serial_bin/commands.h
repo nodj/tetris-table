@@ -69,3 +69,11 @@ struct FillCmd
 	}
 };
 
+inline void DeclareConsumedSerialByte(uint8_t byteCount)
+{
+	Serial.println(__LINE__);
+	Serial.write('<');
+	Serial.write('R');
+	Serial.write(uint8_t(byteCount));
+	Serial.write('>');
+}

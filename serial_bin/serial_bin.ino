@@ -46,12 +46,16 @@ void interpretCommand(const CommandInfo& command)
 }
 
 // edit baud rate at runtime: https://forum.arduino.cc/index.php?topic=382040.0
-void setup() {
-	Serial.println(R"(==== setup ====)");
-
-	pinMode(LED_BUILTIN, OUTPUT);
+void setup()
+{
 	// Serial.begin(3000000);
 	Serial.begin(9600);
+	while (Serial.read() != -1); // flush Rx, just in case
+	DeclareConsumedSerialByte(SERIAL_RX_BUFFER_SIZE-1); // allows to reset the c++ part, flush serial buffers, etc...
+
+	pinMode(LED_BUILTIN, OUTPUT);
+	Serial.println(R"(==== setup ====)");
+
 	strip0.Setup();
 	strip0.Clear();
 	Color_24b c = {0, 0, 100};

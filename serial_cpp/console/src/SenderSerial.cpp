@@ -4,8 +4,10 @@
 
 #include "fmt/format.h"
 #include "SerialPort.hpp"
-#include <utility>
+
+#include <cassert>
 #include <thread>
+#include <utility>
 #include <vector>
 
 
@@ -36,16 +38,17 @@ SenderSerial::SenderSerial()
 	if (Port)
 	{
 		syncThread = { [this] { SyncThreadTask(); } };
-		freeByteAvailable = 63;
 	}
 }
 
 SenderSerial::~SenderSerial()
 {
-	// notify to kill
-
-	syncThreadRunnable = false;
-	syncThread.join();
+	if (syncThread.joinable())
+	{
+		// notify to kill
+		syncThreadRunnable = false;
+		syncThread.join();
+	}
 }
 
 bool SenderSerial::CanSend()
@@ -70,10 +73,14 @@ int SenderSerial::ReceiveBuffer(uint8_t* buffer, uint32_t bufferLength)
 	memset(buffer, 0, bufferLength);
 	std::lock_guard lock(syncThreadMutex);
 	int32_t byteToMove = std::min(bufferLength, receiveQueue.size());
-
-	std::copy(receiveQueue.data(), receiveQueue.data()+byteToMove, buffer);
-	receiveQueue.erase(receiveQueue.begin(), receiveQueue.begin()+byteToMove);
-
+	if (byteToMove)
+	{
+		std::copy(receiveQueue.data(), receiveQueue.data()+byteToMove, buffer);
+		if (receiveQueue.size() == byteToMove)
+			receiveQueue.clear();
+		else
+			receiveQueue.erase(receiveQueue.begin(), receiveQueue.begin()+byteToMove);
+	}
 	return byteToMove;
 }
 
@@ -91,55 +98,87 @@ void SenderSerial::ProcessSendQueue()
 	{
 		isFine = Port->writeSerialPort(sendQueue.data(), byteToSend);
 		freeByteAvailable -= byteToSend;
-		sendQueue.erase(sendQueue.begin(), sendQueue.begin()+byteToSend);
+		if (sendQueue.size() == byteToSend)
+			sendQueue.clear();
+		else
+			sendQueue.erase(sendQueue.begin(), sendQueue.begin()+byteToSend);
+	}
+}
+
+void SenderSerial::ProcessReceivedCommand(const std::vector<uint8_t>& cmd)
+{
+	if (cmd.size() == 2 && cmd[0] == 'R')
+	{
+		uint8_t byteCount = cmd[1];
+		freeByteAvailable += byteCount;
 	}
 }
 
 void SenderSerial::ProcessReceiveQueue()
 {
+	// copy all in a tmp buff
 	int32_t availableBytes = Port->available();
+	std::vector<uint8_t> readBuffer;
+	readBuffer.resize(availableBytes);
+	int32_t actualRead = Port->readSerialPort(readBuffer.data(), readBuffer.size());
+
+
+	////////////////////////////////////////////////////////////////
+	enum class ParseState
+	{
+		ASCII, // nothing special
+		CMD, // following bytes -> cmd buffer
+	};
+	static ParseState ps = ParseState::ASCII;
+	static std::vector<uint8_t> cmdBuffer;
+	////////////////////////////////////////////////////////////////
+
 	auto initialSize = receiveQueue.size();
-	receiveQueue.resize(receiveQueue.size() + availableBytes);
-	int32_t actualRead = Port->readSerialPort(receiveQueue.data()+initialSize, availableBytes);
-	if (actualRead != availableBytes)
+	receiveQueue.reserve(receiveQueue.size() + availableBytes);
+	for (uint8_t b : readBuffer)
 	{
-		receiveQueue.resize(initialSize + actualRead);
+		if (ps == ParseState::ASCII)
+		{
+			if (b == '<')
+			{
+				ps = ParseState::CMD;
+				cmdBuffer.clear();
+				cmdBuffer.reserve(16);
+				continue;
+			}
+			receiveQueue.push_back(b);
+		}
+		else if (ps == ParseState::CMD)
+		{
+			if (b == '>')
+			{
+				ps = ParseState::ASCII;
+				ProcessReceivedCommand(cmdBuffer);
+				cmdBuffer.clear();
+				continue;
+			}
+			receiveQueue.push_back(b);//////// also print
+			cmdBuffer.push_back(b);
+		}
+		else
+		{
+			assert(0);
+		}
 	}
-// 	freeByteAvailable += actualRead; // wow, not at all...
-	//rebudget by the read count as declared by the arduino
-	if (actualRead > 0) freeByteAvailable = 63; // assume arduino has read everything... which is plain false
-}
 
-uint32_t SenderSerial::SendInternal(const void* buffer, uint32_t bufferLength)
-{
-	uint32_t byteCountToSend = std::min(freeByteAvailable, bufferLength);
-
-	if (isFine = CanSend())
-	{
-		isFine = Port->writeSerialPort((uint8_t*)buffer, byteCountToSend);
-	}
-
-	return byteCountToSend;
 }
 
 void SenderSerial::SyncThreadTask()
 {
-	int i = 1;
 	while (syncThreadRunnable)
 	{
 		std::unique_lock lock(syncThreadMutex);
-		if (i == 1)
-		{
-			// polling strategy:
-			ProcessReceiveQueue();
 
-			// todo: could be event driven: https://www.codeproject.com/Articles/2682/Serial-Communication-in-Windows
-		}
-		else
-		{
-			ProcessSendQueue();
-		}
+		// polling strategy:
+		ProcessReceiveQueue();
+		ProcessSendQueue();
+
+		// todo: could be event driven: https://www.codeproject.com/Articles/2682/Serial-Communication-in-Windows
 		syncThreadCV.wait_for(lock, std::chrono::milliseconds(5));
-		i = -i;
 	}
 }

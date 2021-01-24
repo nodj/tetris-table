@@ -28,7 +28,7 @@ public:
 private:
 	void ProcessSendQueue();
 	void ProcessReceiveQueue();
-	uint32_t SendInternal(const void* buffer, uint32_t bufferLength);
+	void ProcessReceivedCommand(const std::vector<uint8_t>& cmd);
 
 	bool isFine = true;
 	uint32_t freeByteAvailable;

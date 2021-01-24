@@ -13,7 +13,16 @@ struct SerialReaderHelper
 
 	SerialReaderHelper()
 		: available(Serial.available())
+		, availableOnCtr(available)
 	{
+	}
+
+	~SerialReaderHelper()
+	{
+		if (int consumed = availableOnCtr - available)
+		{
+			DeclareConsumedSerialByte(consumed);
+		}
 	}
 
 	SerialReaderHelper& operator >> (uint16_t& u16)
@@ -52,6 +61,7 @@ struct SerialReaderHelper
 
 private:
 	int available;
+	int availableOnCtr;
 	bool parseOk = true;
 };
 
@@ -126,7 +136,7 @@ void ProcessInputSerialStream()
 	while (continueReading && reader.CanRead(1))
 	{
 		continueReading = false;
-		switch(gParsingState)
+		switch (gParsingState)
 		{
 			case CommandParsingState::None:
 			{
@@ -139,10 +149,10 @@ void ProcessInputSerialStream()
 				// detect cmd start
 				if (gCurrentHeader.Parse(reader))
 				{
-					Serial.println("> HeaderOk");
-					Serial.print(">> h.cc:");
+					Serial.println("HeaderOk:");
+					Serial.print("\th.cc:");
 					Serial.println(gCurrentHeader.commandCode);
-					Serial.print(">> h.bs:");
+					Serial.print("\th.bs:");
 					Serial.println(gCurrentHeader.commandSize);
 					gParsingState = CommandParsingState::HeaderOk;
 					gCurrentCommand.code = CommandCode(gCurrentHeader.commandCode);
