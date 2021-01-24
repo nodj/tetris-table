@@ -8,20 +8,21 @@
 class SenderInterface
 {
 public:
-	// @returns wether the
+	virtual ~SenderInterface() = default;
+
+	// @returns: wether the PushBuffer methods are usable
 	virtual bool CanSend() = 0;
 
 	virtual void PushBuffer(const uint8_t* buffer, uint32_t bufferLength) = 0;
-	virtual void PushBuffer(const void* buffer, uint32_t bufferLength)
-	{
-		PushBuffer((uint8_t*)buffer, bufferLength);
-	}
+	void PushBuffer(const void* buffer, uint32_t bufferLength) { PushBuffer((uint8_t*)buffer, bufferLength); }
 
 	virtual bool CanReceive() = 0;
 
-	// get the number of readable bytes
+	// @returns: number of readable bytes
 	virtual int32_t Available() = 0;
 
+	// @param buffer: destination buffer
+	// @param bufferLength: destination buffer capacity
 	// @returns: read byte count
 	virtual int ReceiveBuffer(uint8_t* buffer, uint32_t bufferLength) = 0;
 
