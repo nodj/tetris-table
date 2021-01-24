@@ -3,39 +3,73 @@
 #include "commands.h"
 
 
+#define CHECK_BUFFER 1 // todo: optionnally skip checks
 
-///////////////////////////////////////////////////////////////
-bool parseOk = true;
-
-void SerialReadNext(uint16_t& u16, int& available)
+struct SerialReaderHelper
 {
-	uint8_t lo = Serial.read();
-	uint8_t hi = Serial.read();
-	available -= 2;
-	u16 = hi << 8 | lo;
-	parseOk &= available >= 0;
-}
+	// todo: copy all in an internal buffer, send ack to win, and then parse.
+	// -> allows sender to send the following bytes sooner
+	// -> prevents interleaved direct serial read which would break the available byte count
 
-void SerialReadNext(uint8_t& u8, int& available)
-{
-	u8 = Serial.read();
-	available -= 1;
-	parseOk &= available >= 0;
-}
-///////////////////////////////////////////////////////////////
+	SerialReaderHelper()
+		: available(Serial.available())
+	{
+	}
+
+	SerialReaderHelper& operator >> (uint16_t& u16)
+	{
+		uint8_t lo = Serial.read();
+		uint8_t hi = Serial.read();
+		available -= 2;
+		u16 = hi << 8 | lo;
+		parseOk &= available >= 0;
+		return *this;
+	}
+
+	SerialReaderHelper& operator >> (uint8_t& u8)
+	{
+		u8 = Serial.read();
+		available -= 1;
+		parseOk &= available >= 0;
+		return *this;
+	}
+
+	bool CanRead(int16_t byteCount) const { return available >= byteCount; }
+	int16_t Available() const { return available; }
+	int Peek() const { return Serial.peek(); }
+	int16_t ReadAtMost(uint8_t* buffer, int16_t maxByteCount)
+	{
+		const int16_t readCount = max(min(available, maxByteCount), 0);
+		if (readCount)
+		{
+			available -= readCount;
+			for (int i = 0; i < readCount; ++i)
+				buffer[i] = (uint8_t)Serial.read();
+		}
+		return readCount;
+	}
+	void SkipByte(int i) { while (i-- && available--) Serial.read(); }
+
+private:
+	int available;
+	bool parseOk = true;
+};
 
 
 struct Header
 {
-	bool Parse(int available)
+	bool Parse(SerialReaderHelper& reader)
 	{
-		if (available < 4)
-			return false;
-		Serial.read();
-		SerialReadNext(commandCode, available);
-		SerialReadNext(commandSize, available);
-		return true;
+		if (reader.CanRead(4) && reader.Peek() == '<')
+		{
+			reader.SkipByte(1);
+			reader >> commandCode >> commandSize;
+
+			return true;
+		}
+		return false;
 	}
+
 	uint16_t commandSize;
 	uint8_t commandCode;
 };
@@ -47,120 +81,111 @@ enum class CommandParsingState {
 	CommandOk,
 };
 
-CommandParsingState ParsingState;
-Header CurrentHeader;
 
 //---------
-uint8_t* commandBuffer;
-uint32_t commandBufferSize;
-uint32_t commandBufferWrote;
-
+CommandParsingState gParsingState;
+Header gCurrentHeader;
+CommandInfo gCurrentCommand;
+uint32_t gCommandBufferWrote;
 //---------
 
-void FillCmdBuffer(int available)
+
+void FillCommandBuffer(SerialReaderHelper& reader)
 {
-	int bufferSlack = commandBufferSize - commandBufferWrote;
-	int byteToBuffer = min(available, bufferSlack);
-	while (byteToBuffer--)
-	{
-		commandBuffer[commandBufferWrote++] = Serial.read();
-	}
+	int16_t copiedByteCount = reader.ReadAtMost(gCurrentCommand.WritePtr(), gCurrentCommand.Slack());
+	gCurrentCommand.writeOffset += copiedByteCount;
 }
 
 
 bool GetCommandInfo(CommandInfo& ci)
 {
-	if (ParsingState != CommandParsingState::CommandOk)
+	if (gParsingState != CommandParsingState::CommandOk)
 	{
 		return false;
 	}
-	ci.commandCode = CommandCode(CurrentHeader.commandCode);
-	ci.commandBuffer = commandBuffer;
-	ci.commandBufferSize = commandBufferSize;
+
+	ci = gCurrentCommand;
+
+	gCurrentCommand.buffer = nullptr; // dont dealloc just copied ptr... low cost std::move :/
+	gCurrentCommand = CommandInfo();
+	gCurrentHeader = Header();
+
+	gParsingState = CommandParsingState::None;
+
 	return true;
 }
 
-void ClearCurrentCommand()
-{
-	ParsingState = CommandParsingState::None;
+void DbgPrint(const char* txt) { Serial.println(txt); }
 
-	commandBufferSize = 0;
-	commandBufferWrote = 0;
-	delete commandBuffer;
-	commandBuffer = nullptr;
-}
+#define UNHANDLED_ERROR { Serial.print("unhandled Error: l: "); Serial.println(__LINE__); }
 
 void ProcessInputSerialStream()
 {
-	int available = Serial.available();
-	if (available)
+	SerialReaderHelper reader;
+	bool continueReading = true;
+	while (continueReading && reader.CanRead(1))
 	{
-		switch(ParsingState)
+		continueReading = false;
+		switch(gParsingState)
 		{
 			case CommandParsingState::None:
 			{
-				int next = Serial.peek();
-
 				// consume useless chars
-				while (available && next != '<')
+				while (reader.CanRead(1) && reader.Peek() != '<')
 				{
-					Serial.read();
-					--available;
-					next = Serial.peek();
+					reader.SkipByte(1);
 				}
 
 				// detect cmd start
-				if (next == '<')
+				if (gCurrentHeader.Parse(reader))
 				{
-					Serial.println("peeked <");
-					if (CurrentHeader.Parse(available))
+					Serial.println("> HeaderOk");
+					Serial.print(">> h.cc:");
+					Serial.println(gCurrentHeader.commandCode);
+					Serial.print(">> h.bs:");
+					Serial.println(gCurrentHeader.commandSize);
+					gParsingState = CommandParsingState::HeaderOk;
+					gCurrentCommand.code = CommandCode(gCurrentHeader.commandCode);
+					if (gCurrentHeader.commandSize > 0)
 					{
-						if (CurrentHeader.commandSize > 0)
-						{
-							ParsingState = CommandParsingState::HeaderOk;
-
-							commandBufferSize = CurrentHeader.commandSize;
-							commandBufferWrote = 0;
-							delete commandBuffer;
-							commandBuffer = new uint8_t[CurrentHeader.commandSize];
-						}
-						else
-						{
-							ParsingState = CommandParsingState::BufferOk;
-						}
-						return ProcessInputSerialStream();
+						gCurrentCommand.Alloc(gCurrentHeader.commandSize);
 					}
+					else
+					{
+						gParsingState = CommandParsingState::BufferOk;
+					}
+					continueReading = true;
 				}
 				break;
 			}
 
 			case CommandParsingState::HeaderOk:
 			{
-				Serial.println("HeaderOk");
-				Serial.print("h.cc:");
-				Serial.println(CurrentHeader.commandCode);
-				Serial.print("h.bs:");
-				Serial.println(CurrentHeader.commandSize);
-				FillCmdBuffer(available);
-				if (commandBufferSize == commandBufferWrote)
+				FillCommandBuffer(reader);
+
+				if (gCurrentCommand.Slack() == 0)
 				{
-					ParsingState = CommandParsingState::BufferOk;
-					return ProcessInputSerialStream();
+					gParsingState = CommandParsingState::BufferOk;
+					continueReading = true;
 				}
 				break;
 			}
 
 			case CommandParsingState::BufferOk:
 			{
-				Serial.println("BufferOk");
-				if (available)
+				if (reader.CanRead(1))
 				{
-					uint8_t closure = Serial.read();
+					uint8_t closure;
+					reader >> closure;
 					if (closure == '>')
 					{
 						Serial.println("== Command completed !");
-						ParsingState = CommandParsingState::CommandOk;
-						return ProcessInputSerialStream();
+						gParsingState = CommandParsingState::CommandOk;
+						continueReading = true;
+					}
+					else
+					{
+						UNHANDLED_ERROR;
 					}
 				}
 				break;
@@ -172,7 +197,6 @@ void ProcessInputSerialStream()
 				Serial.println("CommandOk");
 				break;
 			}
-		}
-	}
-
-}
+		} // switch
+	} // while continue reading
+} // fn

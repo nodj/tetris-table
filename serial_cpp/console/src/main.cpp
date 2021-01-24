@@ -30,7 +30,8 @@ int main()
 
 	if (remote.Connect())
 	{
-		int32_t w = 150;
+		int32_t w = 500;
+
 		while (true)
 		{
 			remote.Fill({10,0,0});

@@ -5,6 +5,7 @@
 #include <Arduino.h>
 
 #include "common.h"
+#include "config.h"
 
 class Strip
 {
