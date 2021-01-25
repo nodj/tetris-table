@@ -1,7 +1,7 @@
 // johan.duparc
 
 #include <Arduino.h>
-#include "math.h"
+#include <math.h>
 
 #include "commands.h"
 #include "ledstrip.h"
@@ -51,7 +51,8 @@ void setup()
 	// Serial.begin(3000000);
 	Serial.begin(9600);
 	while (Serial.read() != -1); // flush Rx, just in case
-	DeclareConsumedSerialByte(SERIAL_RX_BUFFER_SIZE-1); // allows to reset the c++ part, flush serial buffers, etc...
+	Serial.flush();
+	DeclareSetup(SERIAL_RX_BUFFER_SIZE-1); // allows to reset the c++ part, flush serial buffers, etc...
 
 	pinMode(LED_BUILTIN, OUTPUT);
 	Serial.println(R"(==== setup ====)");

@@ -107,10 +107,15 @@ void SenderSerial::ProcessSendQueue()
 
 void SenderSerial::ProcessReceivedCommand(const std::vector<uint8_t>& cmd)
 {
-	if (cmd.size() == 2 && cmd[0] == 'R')
+	if (cmd.size() == 2 && cmd[0] == 'R') // consumer Rx byte count
 	{
-		uint8_t byteCount = cmd[1];
-		freeByteAvailable += byteCount;
+		freeByteAvailable += cmd[1];
+	}
+	else if (cmd.size() == 2 && cmd[0] == 'S') // setup. buffer size
+	{
+		fmt::print("Setup command received:\n");
+		fmt::print("\tRx buffer: {} bytes", cmd[1]);
+		freeByteAvailable = cmd[1];
 	}
 }
 

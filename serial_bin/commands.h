@@ -71,9 +71,16 @@ struct FillCmd
 
 inline void DeclareConsumedSerialByte(uint8_t byteCount)
 {
-	Serial.println(__LINE__);
 	Serial.write('<');
 	Serial.write('R');
 	Serial.write(uint8_t(byteCount));
+	Serial.write('>');
+}
+
+inline void DeclareSetup(uint8_t rxBufferSize)
+{
+	Serial.write('<');
+	Serial.write('S');
+	Serial.write(uint8_t(rxBufferSize));
 	Serial.write('>');
 }
