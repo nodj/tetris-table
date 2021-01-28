@@ -1,7 +1,11 @@
 // johan.duparc
 
+#pragma once
+
 #include <Arduino.h>
 #include <math.h>
+
+#include "shared/types.h"
 
 #include "commands.h"
 #include "ledstrip.h"
@@ -45,8 +49,8 @@ void interpretCommand(const CommandInfo& command)
 	}
 }
 
-// edit baud rate at runtime: https://forum.arduino.cc/index.php?topic=382040.0
-void setup()
+
+void Setup()
 {
 	// Serial.begin(3000000);
 	Serial.begin(9600);
@@ -59,15 +63,17 @@ void setup()
 
 	strip0.Setup();
 	strip0.Clear();
-	Color_24b c = {0, 0, 100};
+	u8 b = 100;
+	Color_24b c = {0, 0, b};
 	strip0.Fill(c);
 	strip0.Apply();
 	delay(500);
 }
 
-void loop()
+
+void Loop()
 {
-	Serial.println("****");
+	Serial.println("~~");
 
 	ProcessInputSerialStream();
 	CommandInfo command;
@@ -81,4 +87,3 @@ void loop()
 	if (ledBlink) ledState = !ledState;
 	delay(50);
 }
-

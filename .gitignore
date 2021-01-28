@@ -1,19 +1,19 @@
 # visual stuff
-*/.vs/
+.vs/
 *.user
-serial_cpp/console/Debug/
-serial_cpp/console/Release/
-serial_cpp/Debug/
-serial_cpp/Release/
-serial_bin/workspace.code-workspace
-serial_bin/.vscode/
-serial_bin/__vm/
-serial_bin/Debug/
-serial_bin/Release/
-serial_bin/serial_bin.vcxproj*
-serial_bin/serial_bin.sln
+
+Debug/
+Release/
+
+part-arduino/workspace.code-workspace
+part-arduino/.vscode/
+part-arduino/__vm/
+part-arduino/part-arduino.vcxproj*
+part-arduino/part-arduino.sln
+# junction
+part-arduino/shared/
 
 # tps
-serial_cpp/tps/Arduino-SerialCommand-master/
-serial_cpp/tps/fmt-master/
-serial_cpp/tps/SerialPort-master/
+tps/Arduino-SerialCommand-master/
+tps/fmt-master/
+tps/SerialPort-master/

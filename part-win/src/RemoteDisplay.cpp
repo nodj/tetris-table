@@ -66,7 +66,7 @@ void RemoteDisplay::PrintSerialInput()
 	if (i)
 	{
 		fmt::print("received {} bytes:\n", str.length());
-		fmt::print(fmt::fg(fmt::color::deep_sky_blue), str);
+		fmt::print(fmt::fg(fmt::color::deep_sky_blue), "{}", str);
 	}
 }
 

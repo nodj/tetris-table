@@ -18,38 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\tps\fmt-master\include\fmt\args.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\chrono.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\color.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\compile.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\core.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\format-inl.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\format.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\locale.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\os.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\ostream.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\posix.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\printf.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\ranges.h" />
-    <ClInclude Include="..\tps\SerialPort-master\include\SerialPort.hpp" />
-    <ClInclude Include="src\Command.h" />
-    <ClInclude Include="src\RemoteDisplay.h" />
-    <ClInclude Include="src\SenderInterface.h" />
-    <ClInclude Include="src\SenderSerial.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\tps\fmt-master\src\format.cc" />
-    <ClCompile Include="..\tps\SerialPort-master\src\SerialPort.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\RemoteDisplay.cpp" />
-    <ClCompile Include="src\SenderSerial.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{ce9e8cce-c281-4277-a190-7cd9dd3394e4}</ProjectGuid>
-    <RootNamespace>console</RootNamespace>
+    <ProjectGuid>{7443e91c-0c5a-425a-9653-91ba7d0e6092}</ProjectGuid>
+    <RootNamespace>partcommon</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -99,19 +72,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)tps\fmt-master\include;$(SolutionDir)tps\SerialPort-master\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)tps\fmt-master\include;$(SolutionDir)tps\SerialPort-master\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)tps\fmt-master\include;$(SolutionDir)tps\SerialPort-master\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)tps\fmt-master\include;$(SolutionDir)tps\SerialPort-master\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -119,11 +88,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>/w14265 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,11 +102,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>/w14265 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,11 +116,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>/w14265 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -176,11 +130,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>/w14265 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -189,6 +138,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="shared\types.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -2,6 +2,8 @@
 
 #include "RemoteDisplay.h"
 
+#include "shared/types.h"
+
 // https://fmt.dev/latest/index.html
 // rgb terminal require HKCU/Console/VirtualTerminalLevel:DWORD=1
 #include "fmt/color.h"
@@ -34,7 +36,8 @@ int main()
 
 		while (true)
 		{
-			remote.Fill({10,0,0});
+			u8 test = 10;
+			remote.Fill({test,0,0});
 			sleepms(w);
 			remote.Fill({50,0,0});
 			sleepms(w);
