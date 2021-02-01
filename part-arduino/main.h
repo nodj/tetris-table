@@ -52,14 +52,16 @@ void interpretCommand(const CommandInfo& command)
 
 void Setup()
 {
+	pinMode(LED_BUILTIN, OUTPUT);
+
 	// Serial.begin(3000000);
 	Serial.begin(9600);
 	while (Serial.read() != -1); // flush Rx, just in case
 	Serial.flush();
-	DeclareSetup(SERIAL_RX_BUFFER_SIZE-1); // allows to reset the c++ part, flush serial buffers, etc...
+	delay(100);
 
-	pinMode(LED_BUILTIN, OUTPUT);
 	Serial.println(R"(==== setup ====)");
+	DeclareSetup(SERIAL_RX_BUFFER_SIZE-1); // allows to reset the c++ part, flush serial buffers, etc...
 
 	strip0.Setup();
 	strip0.Clear();
@@ -67,7 +69,6 @@ void Setup()
 	Color_24b c = {0, 0, b};
 	strip0.Fill(c);
 	strip0.Apply();
-	delay(500);
 }
 
 
