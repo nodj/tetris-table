@@ -4,19 +4,7 @@
 
 #include <Arduino.h>
 
-#include "common.h"
-
-// #todo: move this in a file shared by all plateforms
-enum CommandCode : uint8_t
-{
-	None          = 'a'-1,
-	Fill          = 'a',
-	LedBlink_void = 'b',
-	LedOn_void    = 'c',
-	LedOff_void   = 'd',
-	CommandCode_max
-};
-
+#include "shared/commands.h"
 
 void ProcessInputSerialStream();
 

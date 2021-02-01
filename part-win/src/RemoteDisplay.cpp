@@ -5,18 +5,8 @@
 #include "Command.h"
 
 #include "fmt/color.h"
+#include "shared/commands.h"
 
-
-enum class CommandCode : uint8_t
-{
-	None          = 'a'-1,
-	Fill          = 'a',
-	LedBlink_void = 'b',
-	LedOn_void    = 'c',
-	LedOff_void   = 'd',
-	
-	_max
-};
 
 struct CommandFill : public Command
 {

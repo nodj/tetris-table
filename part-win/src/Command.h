@@ -1,8 +1,9 @@
 // johan.duparc
 
-#pragma once 
+#pragma once
 
-#include <stdint.h>
+#include "shared/types.h"
+
 #include <vector>
 
 
@@ -11,7 +12,7 @@ class IOBuffer
 public:
 	template<typename T>
 	IOBuffer& operator << (const T& arg);
-	
+
 // private:
 	std::vector<uint8_t> buffer;
 };
@@ -22,10 +23,9 @@ inline IOBuffer& IOBuffer::operator << (const uint8_t& arg)
 	buffer.push_back(arg);
 	return *this;
 }
-	
 
 
-enum class CommandCode : uint8_t;
+enum CommandCode : u8;
 
 class Command
 {

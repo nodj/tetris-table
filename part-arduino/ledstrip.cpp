@@ -3,6 +3,7 @@
 #include "ledstrip.h"
 
 #include "Adafruit_NeoPixel.h"
+#include "shared/types.h"
 
 
 #if WITH_LEDSTRIP0

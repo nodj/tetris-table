@@ -4,8 +4,9 @@
 
 #include <Arduino.h>
 
-#include "common.h"
-#include "config.h"
+#include "shared/config.h"
+
+struct Color_24b;
 
 class Strip
 {
