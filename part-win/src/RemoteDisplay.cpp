@@ -8,29 +8,45 @@
 #include "shared/commands.h"
 
 
+
+template<CommandCode c>
+struct TagCommand : public Command
+{
+	virtual CommandCode GetCode() const override final { return c; }
+};
+
+using CommandFrameBegin = TagCommand<CommandCode::FrameBegin>;
+using CommandFrameEnd   = TagCommand<CommandCode::FrameEnd>;
+using CommandLedOn      = TagCommand<CommandCode::LedOn_void>;
+using CommandLedOff     = TagCommand<CommandCode::LedOff_void>;
+
+
 struct CommandFill : public Command
 {
-	Color_24b c;
+	Color_24b color;
 
-	CommandFill(const Color_24b& color) : c(color) {}
+	CommandFill(const Color_24b& color) : color(color) {}
 	virtual CommandCode GetCode() const override final { return CommandCode::Fill; }
-	virtual void Visit(IOBuffer& Buffer) override final
+	virtual void Visit(IOBuffer& buffer) override final
 	{
-		Buffer << c.R << c.G << c.B;
+		buffer << color;
 	}
 };
 
-struct CommandLedOff : public Command
+
+struct CommandSetPixel : public Command
 {
-	virtual CommandCode GetCode() const override final { return CommandCode::LedOff_void; }
+	uint16_t index;
+	Color_24b color;
+
+	CommandSetPixel(uint16_t index, const Color_24b& color) : index(index), color(color) {}
+	virtual CommandCode GetCode() const override final { return CommandCode::SetPixel; }
+
+	virtual void Visit(IOBuffer& buffer) override final
+	{
+		buffer << index << color;
+	}
 };
-
-struct CommandLedOn : public Command
-{
-	virtual CommandCode GetCode() const override final { return CommandCode::LedOn_void; }
-};
-
-
 
 
 bool RemoteDisplay::Connect()
@@ -44,6 +60,7 @@ bool RemoteDisplay::IsConnected()
 {
 	return sender && sender->CanSend() && sender->CanReceive();
 }
+
 
 void RemoteDisplay::PrintSerialInput()
 {
@@ -59,6 +76,7 @@ void RemoteDisplay::PrintSerialInput()
 		fmt::print(fmt::fg(fmt::color::deep_sky_blue), "{}", str);
 	}
 }
+
 
 void PushCommand(std::unique_ptr<SenderInterface>& sender, const Command& command)
 {
@@ -81,8 +99,26 @@ void PushCommand(std::unique_ptr<SenderInterface>& sender, const Command& comman
 	sender->PushBuffer(&footer, 1);
 }
 
+
 void RemoteDisplay::Fill(const Color_24b& fillColor)
 {
 	PushCommand(sender, CommandFill(fillColor));
 }
 
+
+void RemoteDisplay::FrameBegin()
+{
+	PushCommand(sender, CommandFrameBegin());
+}
+
+
+void RemoteDisplay::FrameEnd()
+{
+	PushCommand(sender, CommandFrameEnd());
+}
+
+
+void RemoteDisplay::SetPixel(int32_t stripIndex, const Color_24b& color)
+{
+	PushCommand(sender, CommandSetPixel(stripIndex, color));
+}

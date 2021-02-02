@@ -12,6 +12,11 @@ enum CommandCode : u8
 	LedOn_void,
 	LedOff_void,
 
+	FrameBegin, // Starts a buffered scope
+	FrameEnd, // Ends the buffered scope, display content
+
+	SetPixel,
+
 	CommandCode_max
 };
 

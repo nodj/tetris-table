@@ -43,6 +43,24 @@ void interpretCommand(const CommandInfo& command)
 			break;
 		}
 
+		case CommandCode::FrameBegin:
+		{
+			break;
+		}
+
+		case CommandCode::FrameEnd:
+		{
+			strip0.Apply();
+			break;
+		}
+
+		case CommandCode::SetPixel:
+		{
+			SetPixelCmd cmd(command);
+			strip0.SetPixel(cmd.index, cmd.color);
+			break;
+		}
+
 		default:
 			Serial.print("unhanded command ");
 			Serial.println(char(command.code));

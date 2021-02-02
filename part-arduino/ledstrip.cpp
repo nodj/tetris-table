@@ -33,8 +33,10 @@ void Strip::Clear()
 
 void Strip::Fill(const Color_24b& color)
 {
-    uint32_t c = 0;
-    uint32_t w = 0;
-    c = w << 24 | uint32_t(color.R) << 16 | uint32_t(color.G) << 8 | uint32_t(color.B);
-    pixels.fill(c);
+    pixels.fill(Adafruit_NeoPixel::Color(color.R, color.G, color.B));
+}
+
+void Strip::SetPixel(uint16_t index, const Color_24b& color)
+{
+    pixels.setPixelColor(index, color.R, color.G, color.B);
 }

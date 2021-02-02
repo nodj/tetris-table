@@ -30,29 +30,48 @@ int main()
 		std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 	};
 
+	auto patern1 = [&]
+	{
+		int32_t w = 50;
+		u8 test = 10;
+		remote.Fill({test,0,0});
+		sleepms(w);
+		remote.Fill({50,0,0});
+		sleepms(w);
+		remote.Fill({100,0,0});
+		sleepms(w);
+		remote.Fill({255,0,0});
+		sleepms(w);
+		remote.Fill({0,255,0});
+		sleepms(w);
+		remote.Fill({0,0,255});
+		sleepms(w);
+		remote.Fill({255,255,255});
+		sleepms(w);
+	};
+
+	auto patern2 = [&]
+	{
+		remote.FrameBegin();
+		remote.Clear();
+		remote.SetPixel(0, {255,   0,   0});
+		remote.SetPixel(1, {  1, 255,   0});
+		remote.SetPixel(2, {  2,   0, 255});
+		remote.SetPixel(7, {  3,   0, 255});
+		remote.SetPixel(8, {255, 255, 255});
+		remote.SetPixel(9, {255,   0,   0});
+		remote.FrameEnd();
+
+		sleepms(2000);
+	};
+
 	if (remote.Connect())
 	{
-		int32_t w = 500;
-
 		while (true)
 		{
-			u8 test = 10;
-			remote.Fill({test,0,0});
-			sleepms(w);
-			remote.Fill({50,0,0});
-			sleepms(w);
-			remote.Fill({100,0,0});
-			sleepms(w);
-			remote.Fill({255,0,0});
-			sleepms(w);
-			remote.Fill({0,255,0});
-			sleepms(w);
-			remote.Fill({0,0,255});
-			sleepms(w);
-			remote.Fill({255,255,255});
-			sleepms(w);
-			remote.Clear();
-			sleepms(w);
+			patern1(); // animated
+			patern2(); // static
+			patern2(); // should not blink
 		}
 	}
 }

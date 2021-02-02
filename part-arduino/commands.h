@@ -57,6 +57,23 @@ struct FillCmd
 	}
 };
 
+struct SetPixelCmd
+{
+	uint16_t index;
+	Color_24b color;
+
+	SetPixelCmd(const CommandInfo& ci)
+	{
+		if (ci.bufferSize >= 2+3)
+		{
+			index = *reinterpret_cast<uint16_t*>(ci.buffer);
+			color.R = ci.buffer[2+0];
+			color.G = ci.buffer[2+1];
+			color.B = ci.buffer[2+2];
+		}
+	}
+};
+
 inline void DeclareConsumedSerialByte(uint8_t byteCount)
 {
 	Serial.write('<');

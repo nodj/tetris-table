@@ -16,6 +16,7 @@ public:
 
     void Clear();
     void Fill(const Color_24b& color);
+    void SetPixel(uint16_t index, const Color_24b& color);
 };
 
 #if WITH_LEDSTRIP0
