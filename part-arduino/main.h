@@ -13,6 +13,7 @@
 
 bool ledState = false;
 bool ledBlink = true;
+bool bufferedMode = false;
 
 
 void interpretCommand(const CommandInfo& command)
@@ -45,11 +46,13 @@ void interpretCommand(const CommandInfo& command)
 
 		case CommandCode::FrameBegin:
 		{
+			bufferedMode = true;
 			break;
 		}
 
 		case CommandCode::FrameEnd:
 		{
+			bufferedMode = false;
 			strip0.Apply();
 			break;
 		}
@@ -64,6 +67,24 @@ void interpretCommand(const CommandInfo& command)
 		default:
 			Serial.print("unhanded command ");
 			Serial.println(char(command.code));
+	}
+
+
+	bool isBufferableCommand = false;
+	switch (command.code)
+	{
+		case CommandCode::LedOn_void:
+		case CommandCode::LedOff_void:
+		case CommandCode::Fill:
+		case CommandCode::SetPixel:
+			isBufferableCommand = true;
+		default:
+			;
+	}
+
+	if (isBufferableCommand && !bufferedMode)
+	{
+		strip0.Apply();
 	}
 }
 
@@ -99,7 +120,6 @@ void Loop()
 	if (GetCommandInfo(command))
 	{
 		interpretCommand(command);
-		strip0.Apply(); // as the arduino api buffers the data
 	}
 
 	digitalWrite(LED_BUILTIN, ledState ? HIGH : LOW);
