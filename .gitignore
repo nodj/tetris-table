@@ -10,8 +10,9 @@ part-arduino/.vscode/
 part-arduino/__vm/
 part-arduino/part-arduino.vcxproj*
 part-arduino/part-arduino.sln
+
 # junction
-part-arduino/shared/
+part-arduino/shared
 
 # tps
 tps/Arduino-SerialCommand-master/
