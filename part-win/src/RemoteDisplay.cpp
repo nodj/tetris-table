@@ -5,7 +5,9 @@
 #include "Command.h"
 
 #include "fmt/color.h"
+
 #include "shared/commands.h"
+#include "shared/config.h"
 
 
 
@@ -51,7 +53,7 @@ struct CommandSetPixel : public Command
 
 bool RemoteDisplay::Connect()
 {
-	sender = std::make_unique<SenderSerial>();
+	sender = std::make_unique<SenderSerial>(BAUD_RATE);
 	return IsConnected();
 }
 

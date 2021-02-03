@@ -15,7 +15,7 @@ class SenderSerial
 	: public SenderInterface
 {
 public:
-	SenderSerial();
+	SenderSerial(int32_t baudRate = 9600);
 	~SenderSerial();
 
 	virtual bool CanSend() override;

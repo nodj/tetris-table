@@ -20,7 +20,7 @@ struct
 } gConfig;
 
 
-SenderSerial::SenderSerial()
+SenderSerial::SenderSerial(int32_t baudRate)
 	: freeByteAvailable(0)
 {
 	for (int i = 0; i < 255; ++i)
@@ -29,9 +29,7 @@ SenderSerial::SenderSerial()
 
 		fmt::memory_buffer port;
 		format_to(port, "\\\\.\\COM{}", i);
-		BaudRate Rate = BaudRate::BR_9600;
-// 		BaudRate Rate = BaudRate(3000000);
-		std::unique_ptr<SerialPort> arduino = std::make_unique<SerialPort>(port.data(), Rate);
+		std::unique_ptr<SerialPort> arduino = std::make_unique<SerialPort>(port.data(), baudRate);
 
 		if (bool isConnected = arduino->isConnected())
 		{

@@ -5,6 +5,7 @@
 #include <Arduino.h>
 #include <math.h>
 
+#include "shared/config.h"
 #include "shared/types.h"
 
 #include "commands.h"
@@ -93,8 +94,7 @@ void Setup()
 {
 	pinMode(LED_BUILTIN, OUTPUT);
 
-	// Serial.begin(3000000);
-	Serial.begin(9600);
+	Serial.begin(BAUD_RATE);
 	while (Serial.read() != -1); // flush Rx, just in case
 	delay(20); //
 

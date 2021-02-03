@@ -2,6 +2,9 @@
 
 #pragma once
 
+// #define BAUD_RATE 256000
+#define BAUD_RATE 9600
+
 #define WITH_LEDSTRIP0 1
 
 #if WITH_LEDSTRIP0
