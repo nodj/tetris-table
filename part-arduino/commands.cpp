@@ -3,69 +3,6 @@
 #include "commands.h"
 
 
-#define CHECK_BUFFER 1 // todo: optionnally skip checks
-
-struct SerialReaderHelper
-{
-	// todo: copy all in an internal buffer, send ack to win, and then parse.
-	// -> allows sender to send the following bytes sooner
-	// -> prevents interleaved direct serial read which would break the available byte count
-
-	SerialReaderHelper()
-		: available(Serial.available())
-		, availableOnCtr(available)
-	{
-	}
-
-	~SerialReaderHelper()
-	{
-		if (int consumed = availableOnCtr - available)
-		{
-			DeclareConsumedSerialByte(consumed);
-		}
-	}
-
-	SerialReaderHelper& operator >> (uint16_t& u16)
-	{
-		uint8_t lo = Serial.read();
-		uint8_t hi = Serial.read();
-		available -= 2;
-		u16 = hi << 8 | lo;
-		parseOk &= available >= 0;
-		return *this;
-	}
-
-	SerialReaderHelper& operator >> (uint8_t& u8)
-	{
-		u8 = Serial.read();
-		available -= 1;
-		parseOk &= available >= 0;
-		return *this;
-	}
-
-	bool CanRead(int16_t byteCount) const { return available >= byteCount; }
-	int16_t Available() const { return available; }
-	int Peek() const { return Serial.peek(); }
-	int16_t ReadAtMost(uint8_t* buffer, int16_t maxByteCount)
-	{
-		const int16_t readCount = max(min(available, maxByteCount), 0);
-		if (readCount)
-		{
-			available -= readCount;
-			for (int i = 0; i < readCount; ++i)
-				buffer[i] = (uint8_t)Serial.read();
-		}
-		return readCount;
-	}
-	void SkipByte(int i) { while (i-- && available--) Serial.read(); }
-
-private:
-	int available;
-	int availableOnCtr;
-	bool parseOk = true;
-};
-
-
 struct Header
 {
 	bool Parse(SerialReaderHelper& reader)
@@ -74,7 +11,6 @@ struct Header
 		{
 			reader.SkipByte(1);
 			reader >> commandCode >> commandSize;
-
 			return true;
 		}
 		return false;
@@ -129,9 +65,8 @@ void DbgPrint(const char* txt) { Serial.println(txt); }
 
 #define UNHANDLED_ERROR { Serial.print("unhandled Error: l: "); Serial.println(__LINE__); }
 
-void ProcessInputSerialStream()
+void ProcessInputSerialStream(SerialReaderHelper& reader)
 {
-	SerialReaderHelper reader;
 	bool continueReading = true;
 	while (continueReading && reader.CanRead(1))
 	{
@@ -149,10 +84,9 @@ void ProcessInputSerialStream()
 				// detect cmd start
 				if (gCurrentHeader.Parse(reader))
 				{
-					Serial.println("HeaderOk:");
-					Serial.print("\th.cc:");
-					Serial.println(gCurrentHeader.commandCode);
-					Serial.print("\th.bs:");
+					Serial.print("HeaderOk: cc:");
+					Serial.print(gCurrentHeader.commandCode);
+					Serial.print(" cs:");
 					Serial.println(gCurrentHeader.commandSize);
 					gParsingState = CommandParsingState::HeaderOk;
 					gCurrentCommand.code = CommandCode(gCurrentHeader.commandCode);
@@ -196,6 +130,9 @@ void ProcessInputSerialStream()
 					else
 					{
 						UNHANDLED_ERROR;
+						Serial.print("expected '>' char, got '");
+						Serial.print(closure);
+						Serial.println("'.");
 					}
 				}
 				break;

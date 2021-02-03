@@ -5,8 +5,9 @@
 #include <Arduino.h>
 
 #include "shared/commands.h"
+#include "SerialReaderHelper.h"
 
-void ProcessInputSerialStream();
+void ProcessInputSerialStream(SerialReaderHelper& reader);
 
 struct CommandInfo
 {

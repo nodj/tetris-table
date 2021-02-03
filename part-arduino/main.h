@@ -10,6 +10,7 @@
 
 #include "commands.h"
 #include "ledstrip.h"
+#include "SerialReaderHelper.h"
 
 
 bool ledState = false;
@@ -114,11 +115,13 @@ void Loop()
 {
 	Serial.println("~~");
 
-	ProcessInputSerialStream();
+	SerialReaderHelper reader;
+	ProcessInputSerialStream(reader);
 	CommandInfo command;
-	if (GetCommandInfo(command))
+	while (GetCommandInfo(command))
 	{
 		interpretCommand(command);
+		ProcessInputSerialStream(reader);
 	}
 
 	digitalWrite(LED_BUILTIN, ledState ? HIGH : LOW);
