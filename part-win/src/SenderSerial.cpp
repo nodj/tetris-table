@@ -3,6 +3,7 @@
 #include "SenderSerial.h"
 
 #include "fmt/format.h"
+#include "fmt/color.h"
 #include "SerialPort.hpp"
 
 #include <cassert>
@@ -15,9 +16,19 @@
 
 struct
 {
-	bool displayTrashedBytes = true;
+	bool printTrashedBytes = false;
 	int silentMsThreshold = 2;
+	bool printCmdChars = true;
+	bool printAlphaChars = true;
+	bool queueAlphaChars = false;
 } gConfig;
+
+
+int32_t GetCommandPayloadByteCount(uint8_t b)
+{
+	if (b == 'R' || b == 'S') return 1;
+	return 0;
+}
 
 
 SenderSerial::SenderSerial(int32_t baudRate)
@@ -48,7 +59,7 @@ SenderSerial::SenderSerial(int32_t baudRate)
 			std::vector<uint8_t> readBuffer;
 			readBuffer.resize(availableBytes);
 			int32_t actualRead = Port->readSerialPort(readBuffer.data(), readBuffer.size());
-			if (gConfig.displayTrashedBytes)
+			if (gConfig.printTrashedBytes)
 			{
 				fmt::print("TRASH ({} bytes):\n", actualRead);
 				for (uint8_t b : readBuffer)
@@ -135,6 +146,7 @@ void SenderSerial::ProcessReceivedCommand(const std::vector<uint8_t>& cmd)
 {
 	if (cmd.size() == 2 && cmd[0] == 'R') // consumer Rx byte count
 	{
+		fmt::print("received 'R' cmd. fba {} -> {}\n", freeByteAvailable, freeByteAvailable+cmd[1]);
 		freeByteAvailable += cmd[1];
 	}
 	else if (cmd.size() == 2 && cmd[0] == 'S') // setup. buffer size
@@ -149,6 +161,9 @@ void SenderSerial::ProcessReceiveQueue()
 {
 	// copy all in a tmp buff
 	int32_t availableBytes = Port->available();
+	if (availableBytes == 0)
+		return;
+// 	fmt::print("\nReceive {} bytes\n", availableBytes);
 	std::vector<uint8_t> readBuffer;
 	readBuffer.resize(availableBytes);
 	int32_t actualRead = Port->readSerialPort(readBuffer.data(), readBuffer.size());
@@ -161,11 +176,22 @@ void SenderSerial::ProcessReceiveQueue()
 		CMD, // following bytes -> cmd buffer
 	};
 	static ParseState ps = ParseState::ASCII;
+	static int32_t cmdByteCount = 0;
+	static int32_t commandPayloadByteCount = 0;
 	static std::vector<uint8_t> cmdBuffer;
 	////////////////////////////////////////////////////////////////
 
 	auto initialSize = receiveQueue.size();
 	receiveQueue.reserve(receiveQueue.size() + availableBytes);
+
+	auto PrintCmdChar = [&](char c) { if (gConfig.printCmdChars) fmt::print(fmt::fg(fmt::color::green),"{}", c); };
+	auto HandleStdChar = [&](uint8_t b) {
+		if (gConfig.printAlphaChars)
+			fmt::print(fmt::fg(fmt::color::blue),"{}", char(b));
+		if (gConfig.queueAlphaChars)
+			receiveQueue.push_back(b);
+	};
+
 	for (uint8_t b : readBuffer)
 	{
 		if (ps == ParseState::ASCII)
@@ -173,30 +199,54 @@ void SenderSerial::ProcessReceiveQueue()
 			if (b == '<')
 			{
 				ps = ParseState::CMD;
+				cmdByteCount = 0;
+
 				cmdBuffer.clear();
 				cmdBuffer.reserve(16);
+				PrintCmdChar(b);
 				continue;
 			}
-			receiveQueue.push_back(b);
+			HandleStdChar(b);
 		}
 		else if (ps == ParseState::CMD)
 		{
-			if (b == '>')
+
+			if (cmdByteCount == 0)
 			{
-				ps = ParseState::ASCII;
-				ProcessReceivedCommand(cmdBuffer);
+				commandPayloadByteCount = GetCommandPayloadByteCount(b);
+				cmdBuffer.reserve(commandPayloadByteCount + 1);
+			}
+
+			cmdByteCount++;
+
+			if (cmdByteCount >= commandPayloadByteCount + 2) // +1 for the cmd code, +1 because we're one past the last payload byte
+			{
+				if (b == '>')
+				{
+					PrintCmdChar(b);
+					ProcessReceivedCommand(cmdBuffer);
+				}
+				else
+				{
+					fmt::print(fmt::fg(fmt::color::red), "command parsing error.");
+				}
 				cmdBuffer.clear();
+				ps = ParseState::ASCII;
 				continue;
 			}
-			receiveQueue.push_back(b);//////// also print
-			cmdBuffer.push_back(b);
+			else
+			{
+				cmdBuffer.push_back(b);
+				PrintCmdChar(b);
+				continue;
+			}
+			HandleStdChar(b);
 		}
 		else
 		{
 			assert(0);
 		}
 	}
-
 }
 
 void SenderSerial::SyncThreadTask()
@@ -213,3 +263,4 @@ void SenderSerial::SyncThreadTask()
 		syncThreadCV.wait_for(lock, std::chrono::milliseconds(5));
 	}
 }
+
