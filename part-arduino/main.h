@@ -96,8 +96,7 @@ void Setup()
 	// Serial.begin(3000000);
 	Serial.begin(9600);
 	while (Serial.read() != -1); // flush Rx, just in case
-	Serial.flush();
-	delay(100);
+	delay(20); //
 
 	Serial.println(R"(==== setup ====)");
 	DeclareSetup(SERIAL_RX_BUFFER_SIZE-1); // allows to reset the c++ part, flush serial buffers, etc...

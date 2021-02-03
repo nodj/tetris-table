@@ -13,8 +13,15 @@
 
 // https://www.codeproject.com/Articles/2682/Serial-Communication-in-Windows
 
+struct
+{
+	bool displayTrashedBytes = true;
+	int silentMsThreshold = 2;
+} gConfig;
+
 
 SenderSerial::SenderSerial()
+	: freeByteAvailable(0)
 {
 	for (int i = 0; i < 255; ++i)
 	{
@@ -34,9 +41,30 @@ SenderSerial::SenderSerial()
 		}
 	}
 
-	freeByteAvailable = 0;
 	if (Port)
 	{
+		// flush old remaining data
+		while (int32_t availableBytes = Port->available())
+		{
+			fmt::print("SenderSerial: trash {} bytes\n", availableBytes);
+			std::vector<uint8_t> readBuffer;
+			readBuffer.resize(availableBytes);
+			int32_t actualRead = Port->readSerialPort(readBuffer.data(), readBuffer.size());
+			if (gConfig.displayTrashedBytes)
+			{
+				fmt::print("TRASH ({} bytes):\n", actualRead);
+				for (uint8_t b : readBuffer)
+					fmt::print("{}", char(b));
+				fmt::print("-----\n");
+			}
+
+			// We don't immediately leave, as the serial port could have more bytes to trash.
+			std::this_thread::sleep_for(std::chrono::milliseconds(gConfig.silentMsThreshold));
+			// Note: It implies at least a few 'silent' milliseconds on the bus in order to leave this loop.
+			// Concretely, the peer have to wait a few ms before sending us content.
+			// Otherwise, that content would be considered Trash...
+		}
+
 		syncThread = { [this] { SyncThreadTask(); } };
 	}
 }
