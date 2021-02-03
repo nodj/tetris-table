@@ -18,25 +18,27 @@ Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRBW + NEO_KHZ800);
 
 void Strip::Setup()
 {
-    pixels.begin();
+	pixels.begin();
 }
 
 void Strip::Apply()
 {
-    pixels.show();
+	// as the documentation says, this call interfere with interupts.
+	// Hence, it messes with the Serial bus and causes data loss...
+	pixels.show();
 }
 
 void Strip::Clear()
 {
-    pixels.clear();
+	pixels.clear();
 }
 
 void Strip::Fill(const Color_24b& color)
 {
-    pixels.fill(Adafruit_NeoPixel::Color(color.R, color.G, color.B));
+	pixels.fill(Adafruit_NeoPixel::Color(color.R, color.G, color.B));
 }
 
 void Strip::SetPixel(uint16_t index, const Color_24b& color)
 {
-    pixels.setPixelColor(index, color.R, color.G, color.B);
+	pixels.setPixelColor(index, color.R, color.G, color.B);
 }

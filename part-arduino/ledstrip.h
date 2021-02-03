@@ -11,12 +11,12 @@ struct Color_24b;
 class Strip
 {
 public:
-    void Setup();
-    void Apply();
+	void Setup();
+	void Apply();
 
-    void Clear();
-    void Fill(const Color_24b& color);
-    void SetPixel(uint16_t index, const Color_24b& color);
+	void Clear();
+	void Fill(const Color_24b& color);
+	void SetPixel(uint16_t index, const Color_24b& color);
 };
 
 #if WITH_LEDSTRIP0
