@@ -25,7 +25,8 @@ void Strip::Apply()
 {
 	// as the documentation says, this call interfere with interupts.
 	// Hence, it messes with the Serial bus and causes data loss...
-	pixels.show();
+
+	// pixels.show();
 }
 
 void Strip::Clear()

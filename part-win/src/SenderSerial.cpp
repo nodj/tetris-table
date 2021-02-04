@@ -97,6 +97,7 @@ void SenderSerial::PushBuffer(const uint8_t* buffer, uint32_t bufferLength)
 {
 	// todo: if the queue is empty, there is a useless copy.
 	std::lock_guard lock(syncThreadMutex);
+	sendQueue.reserve(sendQueue.size() + bufferLength);
 	std::copy(buffer, buffer + bufferLength, std::back_inserter(sendQueue));
 }
 

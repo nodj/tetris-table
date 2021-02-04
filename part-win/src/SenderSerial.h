@@ -43,8 +43,8 @@ private:
 	// S knowing the R buffer size can send just that, decrement the budget.
 	// R read x bytes and notify that. S can increment the budget by that count.
 
-	std::vector<std::uint8_t> sendQueue;
-	std::vector<std::uint8_t> receiveQueue;
+	std::vector<uint8_t> sendQueue;
+	std::vector<uint8_t> receiveQueue;
 
 	// -> inner class
 	void SyncThreadTask();

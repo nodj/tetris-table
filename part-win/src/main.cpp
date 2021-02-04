@@ -14,8 +14,7 @@
 
 
 // wip:
-// 	-> RemoteDisplay handles the command api, simply Sync push .
-// 	-> SenderSerial handle packet splitting (remote buffer < 64 bytes), acknowledgment, build Answers.
+// -> RemoteDisplay handles the command api, simply Sync push .
 
 
 int main()
@@ -75,4 +74,3 @@ int main()
 		}
 	}
 }
-
