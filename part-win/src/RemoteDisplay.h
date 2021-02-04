@@ -46,6 +46,8 @@ private:
 		bool Writable()     const { return canWrite; }
 		void Close()              { canWrite = false; } // bad api warn: warn if already closed
 
+		bool allowedToTransmit = false;
+
 	private:
 		std::vector<uint8_t> buffer;
 		bool canWrite = true; // turned false when closed

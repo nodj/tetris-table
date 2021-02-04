@@ -94,21 +94,25 @@ void RemoteDisplay::TrySendSegments()
 	if (segments.empty())
 		return; // nothing to do
 
-	if (segments[0].IsEmpty())
+	Segment& thisSegment = segments[0];
+
+	// empty but writable, nothing to do
+	if (thisSegment.IsEmpty() && thisSegment.Writable())
+		return;
+
+	// segment actually contains something to send.
+	if (!thisSegment.allowedToTransmit)
+		thisSegment.allowedToTransmit = sender->LastSegmentAck.exchange(false);
+
+	if (thisSegment.allowedToTransmit)
 	{
-		if (segments[0].Writable())
+		thisSegment.Push(sender);
+		if (!thisSegment.Writable())
 		{
-			// empty but writable, nothing to do
-			return;
-		}
-		else
-		{
-			// waiting for ack... Nothing to do either
-			return;
+			// delete finished segment
+			segments.erase(segments.begin());
 		}
 	}
-
-	segments[0].Push(sender);
 }
 
 RemoteDisplay::Segment& RemoteDisplay::GetWriteSegment()
@@ -125,27 +129,6 @@ void RemoteDisplay::CloseSegment()
 
 	segments.back().Close();
 }
-
-// void PushCommandInternal(std::unique_ptr<SenderInterface>& sender, const Command& command)
-// {
-// 	IOBuffer ioBuffer;
-// 	ioBuffer.buffer.reserve(64);
-// 	const_cast<Command&>(command).Visit(ioBuffer);
-//
-// 	uint8_t header = '<';
-// 	sender->PushBuffer(&header, 1);
-//
-// 	uint8_t code = (uint8_t)command.GetCode();
-// 	sender->PushBuffer(&code, 1);
-//
-// 	uint16_t byteCount = static_cast<uint16_t>(ioBuffer.buffer.size());
-// 	sender->PushBuffer(&byteCount, 2);
-//
-// 	sender->PushBuffer(ioBuffer.buffer.data(), byteCount);
-//
-// 	uint8_t footer = '>';
-// 	sender->PushBuffer(&footer, 1);
-// }
 
 
 void RemoteDisplay::Fill(const Color_24b& fillColor)
@@ -194,9 +177,6 @@ void RemoteDisplay::Segment::AddCommand(const Command& command)
 	const_cast<Command&>(command).Visit(ioBuffer);
 	size_t byteCountAfter = buffer.size();
 	ioBuffer << '>';
-
-	// extended footer : detects how many bytes were dropped
-	ioBuffer << '1' << '2';
 
 	// fixup size
 	size_t byteCount = byteCountAfter - byteCountBefore;

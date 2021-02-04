@@ -2,6 +2,7 @@
 
 #pragma once
 #include <stdint.h>
+#include <atomic>
 
 
 // abstract the transport layer (eg, Serial vs...)
@@ -25,4 +26,7 @@ public:
 	// @param bufferLength: destination buffer capacity
 	// @returns: read byte count
 	virtual int ReceiveBuffer(uint8_t* buffer, uint32_t bufferLength) = 0;
+
+	// used by the Serial sender to signal end-of-frame acknowledgment by the arduino
+	std::atomic<bool> LastSegmentAck{true};
 };
