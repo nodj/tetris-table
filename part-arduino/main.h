@@ -25,26 +25,26 @@ void interpretCommand(const CommandInfo& command)
 
 	switch (command.code)
 	{
-		case CommandCode::LedOn_void:
-			ledState = true;
-			ledBlink = false;
-			break;
-
-		case CommandCode::LedOff_void:
-			ledState = false;
-			ledBlink = false;
-			break;
-
-		case CommandCode::LedBlink_void:
-			ledBlink = true;
-			break;
-
-		case CommandCode::Fill:
-		{
-			FillCmd fill(command);
-			strip0.Fill(fill.color);
-			break;
-		}
+// 		case CommandCode::LedOn_void:
+// 			ledState = true;
+// 			ledBlink = false;
+// 			break;
+//
+// 		case CommandCode::LedOff_void:
+// 			ledState = false;
+// 			ledBlink = false;
+// 			break;
+//
+// 		case CommandCode::LedBlink_void:
+// 			ledBlink = true;
+// 			break;
+//
+// 		case CommandCode::Fill:
+// 		{
+// 			FillCmd fill(command);
+// 			strip0.Fill(fill.color);
+// 			break;
+// 		}
 
 		case CommandCode::FrameBegin:
 		{

@@ -64,13 +64,29 @@ int main()
 		sleepms(2000);
 	};
 
+	auto patern3 = [&](int i)
+	{
+		int b = 16;
+		while (b--)
+			remote.SetPixel(3+b, {uint8_t(255 * (i>>b & 1)),   0,  20});
+	};
+
 	if (remote.Connect())
 	{
 		while (true)
 		{
-			patern1(); // animated
-			patern2(); // static
-			patern2(); // should not blink
+// 			patern1(); // animated
+// 			patern2(); // static
+// 			patern2(); // should not blink
+
+			for (int i = 0; i < 30; ++i)
+			{
+				remote.FrameBegin();
+				if (i==0) remote.Clear();
+				patern3(i);
+				remote.FrameEnd();
+				sleepms(200);
+			}
 		}
 	}
 }

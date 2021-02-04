@@ -6,6 +6,7 @@
 
 #include "shared/commands.h"
 #include "SerialReaderHelper.h"
+#include <assert.h>
 
 void ProcessInputSerialStream(SerialReaderHelper& reader);
 
@@ -25,6 +26,10 @@ struct CommandInfo
 		{
 			Dealloc();
 			buffer = new uint8_t[size];
+// 			Serial.print('[');
+// 			Serial.print(uint32_t(buffer));
+// 			Serial.print(']');
+			assert(buffer);
 			bufferSize = size;
 			writeOffset = 0;
 		}
