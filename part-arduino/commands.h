@@ -79,7 +79,7 @@ inline void DeclareConsumedSerialByte(uint8_t byteCount)
 {
 	Serial.write('<');
 	Serial.write('R');
-	Serial.write(uint8_t(byteCount));
+	Serial.write(byteCount);
 	Serial.write('>');
 }
 
@@ -87,6 +87,15 @@ inline void DeclareSetup(uint8_t rxBufferSize)
 {
 	Serial.write('<');
 	Serial.write('S');
-	Serial.write(uint8_t(rxBufferSize));
+	Serial.write(rxBufferSize);
+	Serial.write('>');
+}
+
+inline void DeclareConsumedFrame(int slack, int remaining)
+{
+	Serial.write('<');
+	Serial.write('F');
+	Serial.write(uint8_t(slack));
+	Serial.write(uint8_t(remaining));
 	Serial.write('>');
 }

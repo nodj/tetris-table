@@ -55,7 +55,11 @@ void interpretCommand(const CommandInfo& command)
 		case CommandCode::FrameEnd:
 		{
 			bufferedMode = false;
+			// We expect a serial bus fully consumed now. We should be the last command before a stall
 			strip0.Apply();
+			int remaining = Serial.available();
+			int slack = SERIAL_RX_BUFFER_SIZE - 1 - remaining;
+			DeclareConsumedFrame(slack, remaining); // unblock the serial bus
 			break;
 		}
 
@@ -80,13 +84,12 @@ void interpretCommand(const CommandInfo& command)
 		case CommandCode::Fill:
 		case CommandCode::SetPixel:
 			isBufferableCommand = true;
-		default:
-			;
+		default:;
 	}
 
 	if (isBufferableCommand && !bufferedMode)
 	{
-		strip0.Apply();
+// 		strip0.Apply();
 	}
 }
 
