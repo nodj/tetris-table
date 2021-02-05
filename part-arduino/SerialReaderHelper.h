@@ -22,19 +22,25 @@ struct SerialReaderHelper
 
 	SerialReaderHelper& operator >> (uint16_t& u16)
 	{
-		uint8_t lo = Serial.read();
-		uint8_t hi = Serial.read();
-		available -= 2;
-		u16 = hi << 8 | lo;
-		parseOk &= available >= 0;
+		if (CanRead(2))
+		{
+			uint8_t lo = Serial.read();
+			uint8_t hi = Serial.read();
+			available -= 2;
+			u16 = hi << 8 | lo;
+		}
+		else { parseOk = false; }
 		return *this;
 	}
 
 	SerialReaderHelper& operator >> (uint8_t& u8)
 	{
-		u8 = Serial.read();
-		available -= 1;
-		parseOk &= available >= 0;
+		if (CanRead(1))
+		{
+			u8 = Serial.read();
+			available -= 1;
+		}
+		else { parseOk = false; }
 		return *this;
 	}
 

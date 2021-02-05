@@ -11,47 +11,6 @@
 #include <cassert>
 
 
-
-template<CommandCode c>
-struct TagCommand : public Command
-{
-	virtual CommandCode GetCode() const override final { return c; }
-};
-
-using CommandFrameBegin = TagCommand<CommandCode::FrameBegin>;
-using CommandFrameEnd   = TagCommand<CommandCode::FrameEnd>;
-using CommandLedOn      = TagCommand<CommandCode::LedOn_void>;
-using CommandLedOff     = TagCommand<CommandCode::LedOff_void>;
-
-
-struct CommandFill : public Command
-{
-	Color_24b color;
-
-	CommandFill(const Color_24b& color) : color(color) {}
-	virtual CommandCode GetCode() const override final { return CommandCode::Fill; }
-	virtual void Visit(IOBuffer& buffer) override final
-	{
-		buffer << color;
-	}
-};
-
-
-struct CommandSetPixel : public Command
-{
-	uint16_t index;
-	Color_24b color;
-
-	CommandSetPixel(uint16_t index, const Color_24b& color) : index(index), color(color) {}
-	virtual CommandCode GetCode() const override final { return CommandCode::SetPixel; }
-
-	virtual void Visit(IOBuffer& buffer) override final
-	{
-		buffer << index << color;
-	}
-};
-
-
 bool RemoteDisplay::Connect()
 {
 	sender = std::make_unique<SenderSerial>(BAUD_RATE);
@@ -165,7 +124,7 @@ RemoteDisplay::Segment::Segment()
 void RemoteDisplay::Segment::AddCommand(const Command& command)
 {
 	buffer.reserve(buffer.size() + 32);
-	IOBuffer ioBuffer(buffer);
+	OBuffer_ToVector ioBuffer(buffer);
 
 	ioBuffer << '<';
 	ioBuffer << uint8_t(command.GetCode());

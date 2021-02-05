@@ -11,6 +11,7 @@
 #include "commands.h"
 #include "ledstrip.h"
 #include "SerialReaderHelper.h"
+#include "log.h"
 
 
 bool ledState = false;
@@ -18,33 +19,59 @@ bool ledBlink = true;
 bool bufferedMode = false;
 
 
-void interpretCommand(const CommandInfo& command)
-{
-	Serial.print("interpretCommand:");
-	Serial.println(command.code);
 
-	switch (command.code)
+struct IBuffer_FromStatic: public IOBuffer
+{
+	IBuffer_FromStatic(const uint8_t* buffer, int length)
+		: buffer(buffer)
+		, available(length)
+	{}
+
+private:
+	virtual IOBuffer& ProcessOneByte(uint8_t& arg) override
 	{
-// 		case CommandCode::LedOn_void:
-// 			ledState = true;
-// 			ledBlink = false;
-// 			break;
-//
-// 		case CommandCode::LedOff_void:
-// 			ledState = false;
-// 			ledBlink = false;
-// 			break;
-//
-// 		case CommandCode::LedBlink_void:
-// 			ledBlink = true;
-// 			break;
-//
-// 		case CommandCode::Fill:
-// 		{
-// 			FillCmd fill(command);
-// 			strip0.Fill(fill.color);
-// 			break;
-// 		}
+		arg = *buffer;
+		buffer++;
+		available--;
+		return *this;
+	}
+
+public:
+	const uint8_t* buffer;
+	int available;
+};
+
+
+void InterpretCommand(const CommandBuffer& command)
+{
+	CommandCode cc = command.header.commandCode;
+
+	logV("interpretCommand:");logVln(cc);
+
+	switch (cc)
+	{
+		case CommandCode::LedOn:
+			ledState = true;
+			ledBlink = false;
+			break;
+
+		case CommandCode::LedOff:
+			ledState = false;
+			ledBlink = false;
+			break;
+
+		case CommandCode::LedBlink:
+			ledBlink = true;
+			break;
+
+		case CommandCode::Fill:
+		{
+			IBuffer_FromStatic buffer(&command.payload[0], command.writeOffset);
+			CommandFill fill;
+			fill.Visit(buffer);
+			strip0.Fill(fill.color);
+			break;
+		}
 
 		case CommandCode::FrameBegin:
 		{
@@ -65,22 +92,22 @@ void interpretCommand(const CommandInfo& command)
 
 		case CommandCode::SetPixel:
 		{
-			SetPixelCmd cmd(command);
+			IBuffer_FromStatic buffer(&command.payload[0], command.writeOffset);
+			CommandSetPixel cmd;
+			cmd.Visit(buffer);
 			strip0.SetPixel(cmd.index, cmd.color);
 			break;
 		}
 
 		default:
-			Serial.print("unhanded command ");
-			Serial.println(char(command.code));
+			logW("unhanded command "); logWln(char(cc));
 	}
 
-
 	bool isBufferableCommand = false;
-	switch (command.code)
+	switch (cc)
 	{
-		case CommandCode::LedOn_void:
-		case CommandCode::LedOff_void:
+		case CommandCode::LedOn:
+		case CommandCode::LedOff:
 		case CommandCode::Fill:
 		case CommandCode::SetPixel:
 			isBufferableCommand = true;
@@ -102,7 +129,7 @@ void Setup()
 	while (Serial.read() != -1); // flush Rx, just in case
 	delay(20); //
 
-	Serial.println(R"(==== setup ====)");
+	logW(R"(==== setup ====)");
 	DeclareSetup(SERIAL_RX_BUFFER_SIZE-1); // allows to reset the c++ part, flush serial buffers, etc...
 
 	strip0.Setup();
@@ -114,20 +141,29 @@ void Setup()
 }
 
 
+bool TryConsumeCommand(SerialReaderHelper& reader, CommandParser& parser)
+{
+	parser.ProcessInputSerialStream(reader);
+	if (parser.GetCommand())
+	{
+		InterpretCommand(*parser.GetCommand());
+
+		parser.NextCommand();
+		return true;
+	}
+	return false;
+}
+
+
 void Loop()
 {
-	Serial.println("~~");
+	logVln("~~");
 
 	SerialReaderHelper reader;
-	ProcessInputSerialStream(reader);
-	CommandInfo command;
-	while (GetCommandInfo(command))
-	{
-		interpretCommand(command);
-		ProcessInputSerialStream(reader);
-	}
+	static CommandParser parser;
+	while (TryConsumeCommand(reader, parser));
 
 	digitalWrite(LED_BUILTIN, ledState ? HIGH : LOW);
 	if (ledBlink) ledState = !ledState;
-	delay(50);
+	delay(5);
 }

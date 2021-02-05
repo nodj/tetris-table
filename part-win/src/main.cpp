@@ -68,7 +68,7 @@ int main()
 	{
 		int b = 16;
 		while (b--)
-			remote.SetPixel(3+b, {uint8_t(255 * (i>>b & 1)),   0,  20});
+			remote.SetPixel(3+b, {uint8_t(100 * (i>>b & 1)),  0,  10});
 	};
 
 	if (remote.Connect())
@@ -79,13 +79,13 @@ int main()
 // 			patern2(); // static
 // 			patern2(); // should not blink
 
-			for (int i = 0; i < 30; ++i)
+			for (int i = 0; i < 1<<16; ++i)
 			{
 				remote.FrameBegin();
 				if (i==0) remote.Clear();
 				patern3(i);
 				remote.FrameEnd();
-				sleepms(200);
+				sleepms(50);
 			}
 		}
 	}

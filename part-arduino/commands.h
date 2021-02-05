@@ -8,76 +8,52 @@
 #include "SerialReaderHelper.h"
 #include <assert.h>
 
-void ProcessInputSerialStream(SerialReaderHelper& reader);
 
-struct CommandInfo
+struct Header
 {
-	CommandInfo(uint16_t size = 0) { Alloc(size); }
-	~CommandInfo() { Dealloc(); }
+	bool Parse(SerialReaderHelper& reader)
+	{
+		if (reader.CanRead(4) && reader.Peek() == '<')
+		{
+			reader.SkipByte(1);
+			reader >> (u8&)commandCode >> commandSize;
+			return true;
+		}
+		return false;
+	}
 
-	CommandCode code = CommandCode::None;
-	uint8_t* buffer = nullptr;
-	uint16_t bufferSize = 0;
+	uint16_t commandSize;
+	CommandCode commandCode;
+};
+
+struct CommandBuffer
+{
+	enum {MaximumPayloadSize = 256};
+	Header header;
+	uint8_t payload[MaximumPayloadSize];
 	uint16_t writeOffset = 0;
 
-	void Alloc(uint16_t size)
-	{
-		if (size > 0)
-		{
-			Dealloc();
-			buffer = new uint8_t[size];
-// 			Serial.print('[');
-// 			Serial.print(uint32_t(buffer));
-// 			Serial.print(']');
-			assert(buffer);
-			bufferSize = size;
-			writeOffset = 0;
-		}
-	}
-	void Dealloc()
-	{
-		delete[] buffer;
-		buffer = nullptr;
-		bufferSize = 0;
-	}
-	int16_t Slack() const { return bufferSize - writeOffset; }
-	uint8_t* WritePtr() const { return buffer + writeOffset; }
+	void FillBuffer(SerialReaderHelper& reader);
+	bool IsComplete() const { return writeOffset >= header.commandSize; }
 };
 
-bool GetCommandInfo(CommandInfo& ci);
-void ClearCurrentCommand();
-
-// specific to this project
-struct FillCmd
+struct CommandParser
 {
-	Color_24b color;
+	void ProcessInputSerialStream(SerialReaderHelper& reader);
+	const CommandBuffer* GetCommand() const { return parsingState == CommandParsingState::CommandOk ? &cmdBuffer : nullptr; }
+	void NextCommand() { parsingState = CommandParsingState::None; }
 
-	FillCmd(const CommandInfo& ci)
-	{
-		if (ci.bufferSize >= 3)
-		{
-			color.R = ci.buffer[0];
-			color.G = ci.buffer[1];
-			color.B = ci.buffer[2];
-		}
-	}
-};
+private:
+	bool ProcessInputSerialStreamImpl(SerialReaderHelper& reader);
+	enum class CommandParsingState {
+		None,
+		HeaderOk,
+		BufferOk,
+		CommandOk,
+	};
 
-struct SetPixelCmd
-{
-	uint16_t index;
-	Color_24b color;
-
-	SetPixelCmd(const CommandInfo& ci)
-	{
-		if (ci.bufferSize >= 2+3)
-		{
-			index = *reinterpret_cast<uint16_t*>(ci.buffer);
-			color.R = ci.buffer[2+0];
-			color.G = ci.buffer[2+1];
-			color.B = ci.buffer[2+2];
-		}
-	}
+	CommandParsingState parsingState = CommandParsingState::None;
+	CommandBuffer cmdBuffer;
 };
 
 inline void DeclareConsumedSerialByte(uint8_t byteCount)

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#define BAUD_RATE 100000
+#define BAUD_RATE 1000000
 
 #define WITH_LEDSTRIP0 1
 

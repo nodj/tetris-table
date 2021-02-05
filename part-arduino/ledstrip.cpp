@@ -41,7 +41,5 @@ void Strip::Fill(const Color_24b& color)
 
 void Strip::SetPixel(uint16_t index, const Color_24b& color)
 {
-	Serial.print("*** ");
-	Serial.println(index);
 	pixels.setPixelColor(index, color.R, color.G, color.B);
 }

@@ -2,6 +2,8 @@
 
 #include "SerialReaderHelper.h"
 #include "commands.h"
+#include "log.h"
+
 
 SerialReaderHelper::~SerialReaderHelper()
 {
@@ -13,9 +15,9 @@ SerialReaderHelper::~SerialReaderHelper()
 
 int16_t SerialReaderHelper::ReadAtMost(uint8_t* buffer, int16_t maxByteCount)
 {
-	Serial.print("a:");
-	Serial.println(available);
 	const int16_t readCount = max(min(available, maxByteCount), 0);
+	logV("RaM: a:"); logV(available); logV(" m:"); logV(maxByteCount); logV(" r:"); logVln(readCount);
+
 	if (readCount)
 	{
 		available -= readCount;
