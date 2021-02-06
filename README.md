@@ -13,4 +13,5 @@ High level description:
 - The windows part generate commands to fill a color buffer
 - the arduino part interpret commands and drives the leds
 
+![MSBuild](https://github.com/nodj/tetris-table/workflows/MSBuild/badge.svg)
 ![Super-Linter](https://github.com/nodj/tetris-table/workflows/Super-Linter/badge.svg?branch=main)

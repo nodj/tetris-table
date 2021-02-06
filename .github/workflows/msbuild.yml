@@ -33,9 +33,9 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: msbuild /m /p:Configuration=Debug /p:Platform=x86 /t:part-common ${{env.SOLUTION_FILE_PATH}}
 
-    - name: Build ( Debug | x86 | part-win )
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: msbuild /m /p:Configuration=Debug /p:Platform=x86 /t:part-win ${{env.SOLUTION_FILE_PATH}}
+    # - name: Build ( Debug | x86 | part-win )
+    #   working-directory: ${{env.GITHUB_WORKSPACE}}
+    #   run: msbuild /m /p:Configuration=Debug /p:Platform=x86 /t:part-win ${{env.SOLUTION_FILE_PATH}}
 
       # build matrix ?
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
