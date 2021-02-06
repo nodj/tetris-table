@@ -1,0 +1,24 @@
+name: test workflow
+
+on: [push, create]
+
+env:
+  SOLUTION_FILE_PATH: Test.sln
+
+  BUILD_CONFIGURATION: Release
+
+jobs:
+  my_not_so_fancy_job:
+    runs-on: windows-latest
+
+    steps:
+    - name: print newly create ref
+      run: echo new ref ${{env.GITHUB_WORKSPACE}}
+
+  my_not_so_fancy_job_on_Linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: print newly create ref
+      run: echo new ref ${{env.GITHUB_WORKSPACE}}
+
