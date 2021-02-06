@@ -3,8 +3,7 @@ name: test workflow
 on: [push, create]
 
 env:
-  SOLUTION_FILE_PATH: Test.sln
-
+  MY_ENV_VAR: yolooo
   BUILD_CONFIGURATION: Release
 
 jobs:
@@ -14,6 +13,14 @@ jobs:
     steps:
     - name: print newly create ref
       run: echo new ref ${{env.GITHUB_WORKSPACE}}
+      shell: cmd
+
+    - name: print  newly create ref
+      run: |
+        echo first cmd
+        echo second cmd
+        echo MY_ENV_VAR: ${{env.MY_ENV_VAR}}
+      shell: cmd
 
   my_not_so_fancy_job_on_Linux:
     runs-on: ubuntu-latest
