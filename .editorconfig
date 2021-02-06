@@ -2,9 +2,24 @@
 
 root = true
 
-[*]
+# code stuff
+[*.{c,cpp,h,hpp,ino}]
+charset = utf-8
 indent_style = tab
 indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# other text files we could care about
+[*.{md,txt,bat,todo}]
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
+
+# ignore all root folders starting with '.', and tps
+[/{tps,.*}/**]
+charset = unset
+indent_style = unset
+indent_size = unset
+trim_trailing_whitespace = unset
+insert_final_newline = unset
