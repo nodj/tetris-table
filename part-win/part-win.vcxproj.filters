@@ -4,43 +4,43 @@
     <ClInclude Include="..\tps\SerialPort-master\include\SerialPort.hpp">
       <Filter>tps</Filter>
     </ClInclude>
-    <ClInclude Include="..\tps\fmt-master\include\fmt\args.h">
+    <ClInclude Include="..\tps\fmt\include\fmt\args.h">
       <Filter>tps\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="..\tps\fmt-master\include\fmt\chrono.h">
+    <ClInclude Include="..\tps\fmt\include\fmt\chrono.h">
       <Filter>tps\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="..\tps\fmt-master\include\fmt\color.h">
+    <ClInclude Include="..\tps\fmt\include\fmt\color.h">
       <Filter>tps\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="..\tps\fmt-master\include\fmt\compile.h">
+    <ClInclude Include="..\tps\fmt\include\fmt\compile.h">
       <Filter>tps\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="..\tps\fmt-master\include\fmt\core.h">
+    <ClInclude Include="..\tps\fmt\include\fmt\core.h">
       <Filter>tps\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="..\tps\fmt-master\include\fmt\format.h">
+    <ClInclude Include="..\tps\fmt\include\fmt\format.h">
       <Filter>tps\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="..\tps\fmt-master\include\fmt\format-inl.h">
+    <ClInclude Include="..\tps\fmt\include\fmt\format-inl.h">
       <Filter>tps\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="..\tps\fmt-master\include\fmt\locale.h">
+    <ClInclude Include="..\tps\fmt\include\fmt\locale.h">
       <Filter>tps\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="..\tps\fmt-master\include\fmt\os.h">
+    <ClInclude Include="..\tps\fmt\include\fmt\os.h">
       <Filter>tps\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="..\tps\fmt-master\include\fmt\ostream.h">
+    <ClInclude Include="..\tps\fmt\include\fmt\ostream.h">
       <Filter>tps\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="..\tps\fmt-master\include\fmt\posix.h">
+    <ClInclude Include="..\tps\fmt\include\fmt\posix.h">
       <Filter>tps\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="..\tps\fmt-master\include\fmt\printf.h">
+    <ClInclude Include="..\tps\fmt\include\fmt\printf.h">
       <Filter>tps\fmt</Filter>
     </ClInclude>
-    <ClInclude Include="..\tps\fmt-master\include\fmt\ranges.h">
+    <ClInclude Include="..\tps\fmt\include\fmt\ranges.h">
       <Filter>tps\fmt</Filter>
     </ClInclude>
     <ClInclude Include="src\SenderInterface.h">
@@ -57,7 +57,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\tps\fmt-master\src\format.cc">
+    <ClCompile Include="..\tps\fmt\src\format.cc">
       <Filter>tps\src</Filter>
     </ClCompile>
     <ClCompile Include="..\tps\SerialPort-master\src\SerialPort.cpp">

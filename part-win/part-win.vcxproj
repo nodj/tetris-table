@@ -19,19 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\tps\fmt-master\include\fmt\args.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\chrono.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\color.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\compile.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\core.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\format-inl.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\format.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\locale.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\os.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\ostream.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\posix.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\printf.h" />
-    <ClInclude Include="..\tps\fmt-master\include\fmt\ranges.h" />
+    <ClInclude Include="..\tps\fmt\include\fmt\args.h" />
+    <ClInclude Include="..\tps\fmt\include\fmt\chrono.h" />
+    <ClInclude Include="..\tps\fmt\include\fmt\color.h" />
+    <ClInclude Include="..\tps\fmt\include\fmt\compile.h" />
+    <ClInclude Include="..\tps\fmt\include\fmt\core.h" />
+    <ClInclude Include="..\tps\fmt\include\fmt\format-inl.h" />
+    <ClInclude Include="..\tps\fmt\include\fmt\format.h" />
+    <ClInclude Include="..\tps\fmt\include\fmt\locale.h" />
+    <ClInclude Include="..\tps\fmt\include\fmt\os.h" />
+    <ClInclude Include="..\tps\fmt\include\fmt\ostream.h" />
+    <ClInclude Include="..\tps\fmt\include\fmt\posix.h" />
+    <ClInclude Include="..\tps\fmt\include\fmt\printf.h" />
+    <ClInclude Include="..\tps\fmt\include\fmt\ranges.h" />
     <ClInclude Include="..\tps\SerialPort-master\include\SerialPort.hpp" />
     <ClInclude Include="src\Command.h" />
     <ClInclude Include="src\RemoteDisplay.h" />
@@ -39,7 +39,7 @@
     <ClInclude Include="src\SenderSerial.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\tps\fmt-master\src\format.cc" />
+    <ClCompile Include="..\tps\fmt\src\format.cc" />
     <ClCompile Include="..\tps\SerialPort-master\src\SerialPort.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\RemoteDisplay.cpp" />
@@ -100,19 +100,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt-master\include;$(SolutionDir)tps\SerialPort-master\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort-master\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt-master\include;$(SolutionDir)tps\SerialPort-master\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort-master\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt-master\include;$(SolutionDir)tps\SerialPort-master\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort-master\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt-master\include;$(SolutionDir)tps\SerialPort-master\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort-master\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
