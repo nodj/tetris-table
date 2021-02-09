@@ -11,6 +11,7 @@ jobs:
     runs-on: windows-latest
 
     strategy:
+      fail-fast: false
       matrix:
         Plateform: [x86, x64]
         Configuration: [Debug, Release]
