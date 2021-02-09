@@ -32,7 +32,7 @@
     <ClInclude Include="..\tps\fmt\include\fmt\posix.h" />
     <ClInclude Include="..\tps\fmt\include\fmt\printf.h" />
     <ClInclude Include="..\tps\fmt\include\fmt\ranges.h" />
-    <ClInclude Include="..\tps\SerialPort-master\include\SerialPort.hpp" />
+    <ClInclude Include="..\tps\SerialPort\include\SerialPort.hpp" />
     <ClInclude Include="src\Command.h" />
     <ClInclude Include="src\RemoteDisplay.h" />
     <ClInclude Include="src\SenderInterface.h" />
@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\tps\fmt\src\format.cc" />
-    <ClCompile Include="..\tps\SerialPort-master\src\SerialPort.cpp" />
+    <ClCompile Include="..\tps\SerialPort\src\SerialPort.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\RemoteDisplay.cpp" />
     <ClCompile Include="src\SenderSerial.cpp" />
@@ -100,19 +100,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort-master\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort-master\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort-master\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort-master\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

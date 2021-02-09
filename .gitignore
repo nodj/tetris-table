@@ -5,18 +5,5 @@
 Debug/
 Release/
 
-part-arduino/workspace.code-workspace
-part-arduino/.vscode/
-part-arduino/__vm/
-part-arduino/part-arduino.vcxproj*
-part-arduino/part-arduino.sln
-
 # junction
 part-arduino/shared
-
-# tps
-tps/Arduino-SerialCommand-master/
-tps/fmt-master/
-tps/SerialPort-master/
-
-tasks.todo

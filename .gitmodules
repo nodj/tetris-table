@@ -2,3 +2,7 @@
 	path = tps/fmt
 	url = https://github.com/fmtlib/fmt.git
 	branch = master
+[submodule "SerialPort"]
+	path = tps/SerialPort
+	url = https://github.com/nodj/SerialPort.git
+	branch = nodj-tetris-projects-edits
