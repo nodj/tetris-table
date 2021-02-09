@@ -6,15 +6,15 @@ env:
   # Path to the solution file relative to the root of the project.
   SOLUTION_FILE_PATH: .
 
-  # Configuration type to build.
-  # You can convert this to a build matrix if you need coverage of multiple configuration types.
-  # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-  BUILD_CONFIGURATION: Release
-
-
 jobs:
   build:
     runs-on: windows-latest
+
+    strategy:
+      matrix:
+        Plateform: [x86, x64]
+        Configuration: [Debug, Release]
+        Project: [part-common, part-win]
 
     steps:
     - name: Checkout repository and submodules
@@ -25,17 +25,17 @@ jobs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1
 
-    - name: Restore NuGet packages
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+    # - name: Restore NuGet packages
+    #   working-directory: ${{env.GITHUB_WORKSPACE}}
+    #   run: nuget restore ${{env.SOLUTION_FILE_PATH}}
 
-    - name: Build ( Debug | x86 | part-common )
+    - name: Build ( ${{matrix.Configuration}} | ${{matrix.Plateform}} | ${{matrix.Project}} )
       working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: msbuild /m /p:Configuration=Debug /p:Platform=x86 /t:part-common ${{env.SOLUTION_FILE_PATH}}
+      run: msbuild /m /p:Configuration=${{matrix.Configuration}} /p:Platform=${{matrix.Plateform}} /t:${{matrix.Project}} ${{env.SOLUTION_FILE_PATH}}
 
     - name: Build ( Debug | x86 | part-win )
       working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: msbuild /m /p:Configuration=Debug /p:Platform=x86 /t:part-win ${{env.SOLUTION_FILE_PATH}}
+      run: msbuild /m /p:Configuration=${{matrix.Configuration}} /p:Platform=${{matrix.Plateform}} /t:part-win ${{env.SOLUTION_FILE_PATH}}
 
       # build matrix ?
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
