@@ -19,11 +19,11 @@ public:
 	~SenderSerial();
 
 	virtual bool CanSend() override;
-	virtual void PushBuffer(const uint8_t* buffer, uint32_t bufferLength) override;
+	virtual void PushBuffer(const uint8_t* buffer, size_t bufferLength) override;
 
 	virtual bool CanReceive() override;
-	virtual int32_t Available() override;
-	virtual int ReceiveBuffer(uint8_t* buffer, uint32_t bufferLength) override;
+	virtual size_t Available() override;
+	virtual size_t ReceiveBuffer(uint8_t* buffer, size_t bufferLength) override;
 
 private:
 	void ProcessSendQueue();
@@ -31,7 +31,7 @@ private:
 	void ProcessReceivedCommand(const std::vector<uint8_t>& cmd);
 
 	bool isFine = true;
-	uint32_t freeByteAvailable;
+	size_t freeByteAvailable;
 	std::unique_ptr<class SerialPort> Port;
 
 	// stategy 1:

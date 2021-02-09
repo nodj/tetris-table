@@ -59,7 +59,7 @@ SenderSerial::SenderSerial(int32_t baudRate)
 			fmt::print("SenderSerial: trash {} bytes\n", availableBytes);
 			std::vector<uint8_t> readBuffer;
 			readBuffer.resize(availableBytes);
-			int32_t actualRead = Port->readSerialPort(readBuffer.data(), readBuffer.size());
+			size_t actualRead = Port->readSerialPort(readBuffer.data(), (uint32_t)readBuffer.size());
 			if (gConfig.printTrashedBytes)
 			{
 				fmt::print("TRASH ({} bytes):\n", actualRead);
@@ -94,7 +94,7 @@ bool SenderSerial::CanSend()
 	return isFine && Port && Port->isConnected();
 }
 
-void SenderSerial::PushBuffer(const uint8_t* buffer, uint32_t bufferLength)
+void SenderSerial::PushBuffer(const uint8_t* buffer, size_t bufferLength)
 {
 	// todo: if the queue is empty, there is a useless copy.
 	std::lock_guard lock(syncThreadMutex);
@@ -107,11 +107,11 @@ bool SenderSerial::CanReceive()
 	return true;
 }
 
-int SenderSerial::ReceiveBuffer(uint8_t* buffer, uint32_t bufferLength)
+size_t SenderSerial::ReceiveBuffer(uint8_t* buffer, size_t bufferLength)
 {
 	memset(buffer, 0, bufferLength);
 	std::lock_guard lock(syncThreadMutex);
-	int32_t byteToMove = std::min(bufferLength, receiveQueue.size());
+	size_t byteToMove = std::min(bufferLength, receiveQueue.size());
 	if (byteToMove)
 	{
 		std::copy(receiveQueue.data(), receiveQueue.data()+byteToMove, buffer);
@@ -123,7 +123,7 @@ int SenderSerial::ReceiveBuffer(uint8_t* buffer, uint32_t bufferLength)
 	return byteToMove;
 }
 
-int32_t SenderSerial::Available()
+size_t SenderSerial::Available()
 {
 	std::lock_guard lock(syncThreadMutex);
 	return receiveQueue.size();
@@ -131,7 +131,7 @@ int32_t SenderSerial::Available()
 
 void SenderSerial::ProcessSendQueue()
 {
-	uint8_t byteToSend = (uint8_t)std::min(freeByteAvailable, sendQueue.size());
+	uint8_t byteToSend = (uint8_t)std::min(std::min(freeByteAvailable, (size_t)255), sendQueue.size());
 
 	if (byteToSend > 0)
 	{
@@ -180,7 +180,7 @@ void SenderSerial::ProcessReceiveQueue()
 // 	fmt::print("\nReceive {} bytes\n", availableBytes);
 	std::vector<uint8_t> readBuffer;
 	readBuffer.resize(availableBytes);
-	int32_t actualRead = Port->readSerialPort(readBuffer.data(), readBuffer.size());
+	int32_t actualRead = Port->readSerialPort(readBuffer.data(), (uint32_t)readBuffer.size());
 
 
 	////////////////////////////////////////////////////////////////

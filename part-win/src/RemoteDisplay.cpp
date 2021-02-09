@@ -26,12 +26,12 @@ bool RemoteDisplay::IsConnected()
 
 void RemoteDisplay::PrintSerialInput()
 {
-	if (int32_t availableByteCount = sender->Available())
+	if (size_t availableByteCount = sender->Available())
 	{
 		fmt::print("({} bytes available)\n", availableByteCount);
 		std::string str;
 		str.resize(availableByteCount);
-		int i = sender->ReceiveBuffer((uint8_t*)str.data(), str.length());
+		size_t i = sender->ReceiveBuffer((uint8_t*)str.data(), str.length());
 		str.resize(i);
 		if (i)
 		{
