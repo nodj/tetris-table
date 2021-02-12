@@ -1,4 +1,4 @@
-// johan.duparc
+// This file is part of the tetris-table project. Copyright (c) Johan Duparc.
 
 #pragma once
 #include <stdint.h>

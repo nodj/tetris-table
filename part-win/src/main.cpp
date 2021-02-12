@@ -1,4 +1,4 @@
-// johan.duparc
+// This file is part of the tetris-table project. Copyright (c) Johan Duparc.
 
 #include "RemoteDisplay.h"
 
@@ -9,12 +9,10 @@
 #include "fmt/color.h"
 #include "fmt/format.h"
 
+#include "tc/TetrisHost.h"
+
 #include <chrono>
 #include <thread>
-
-
-// wip:
-// -> RemoteDisplay handles the command api, simply Sync push .
 
 
 int main()
@@ -22,6 +20,8 @@ int main()
 	fmt::print("Hello World!\n");
 
 	RemoteDisplay remote;
+
+	tc::TetrisHost host;
 
 	auto sleepms = [&](uint32_t ms)
 	{

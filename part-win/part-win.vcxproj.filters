@@ -55,6 +55,57 @@
     <ClInclude Include="src\Command.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\tps\tetris-core\include\tc\TetrisHost.h">
+      <Filter>tps\tc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\tetris-core\include\tc\modes\GameMode.h">
+      <Filter>tps\tc\modes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\tetris-core\include\tc\modes\GameModeStandard.h">
+      <Filter>tps\tc\modes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\tetris-core\include\tc\modes\NodeIds.h">
+      <Filter>tps\tc\modes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\tetris-core\include\tc\modes\Standard\PlayStateNode.h">
+      <Filter>tps\tc\modes\Standard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\tetris-core\include\tc\modes\Standard\WaitStateNode.h">
+      <Filter>tps\tc\modes\Standard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\tetris-core\include\tc\modes\Standard\PauseStateNode.h">
+      <Filter>tps\tc\modes\Standard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\InputTracker.h">
+      <Filter>tps\tc\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\LevelManager.h">
+      <Filter>tps\tc\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\LogicTickConverter.h">
+      <Filter>tps\tc\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\PieceGenerator.h">
+      <Filter>tps\tc\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\pieces.h">
+      <Filter>tps\tc\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\SRS.h">
+      <Filter>tps\tc\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\StateTracker.h">
+      <Filter>tps\tc\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\types.h">
+      <Filter>tps\tc\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\Board.h">
+      <Filter>tps\tc\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\GameplayInput.h">
+      <Filter>tps\tc\details</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\tps\fmt\src\format.cc">
@@ -72,6 +123,9 @@
     <ClCompile Include="src\SenderSerial.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\tps\tetris-core\sources\tc.cpp">
+      <Filter>tps\src\tc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="tps">
@@ -85,6 +139,21 @@
     </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{867cb7b4-81ac-4aa8-876d-8827a0174022}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tps\tc">
+      <UniqueIdentifier>{6c87ea79-bc8e-48ca-8bfe-e0010d724664}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tps\tc\modes">
+      <UniqueIdentifier>{258e1805-4828-463e-aa0b-a98d01c2c3c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tps\src\tc">
+      <UniqueIdentifier>{b69bed15-d79e-45f1-a0db-ca27cbb3bd12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tps\tc\modes\Standard">
+      <UniqueIdentifier>{9761355d-736e-4fad-a23d-69cf2651d6b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tps\tc\details">
+      <UniqueIdentifier>{d6fab87f-fd57-47f9-a237-0ec2e8f7afd8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
