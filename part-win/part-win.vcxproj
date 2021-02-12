@@ -33,6 +33,23 @@
     <ClInclude Include="..\tps\fmt\include\fmt\printf.h" />
     <ClInclude Include="..\tps\fmt\include\fmt\ranges.h" />
     <ClInclude Include="..\tps\SerialPort\include\SerialPort.hpp" />
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\Board.h" />
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\GameplayInput.h" />
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\InputTracker.h" />
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\LevelManager.h" />
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\LogicTickConverter.h" />
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\PieceGenerator.h" />
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\pieces.h" />
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\SRS.h" />
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\StateTracker.h" />
+    <ClInclude Include="..\tps\tetris-core\include\tc\details\types.h" />
+    <ClInclude Include="..\tps\tetris-core\include\tc\modes\GameMode.h" />
+    <ClInclude Include="..\tps\tetris-core\include\tc\modes\GameModeStandard.h" />
+    <ClInclude Include="..\tps\tetris-core\include\tc\modes\NodeIds.h" />
+    <ClInclude Include="..\tps\tetris-core\include\tc\modes\Standard\PauseStateNode.h" />
+    <ClInclude Include="..\tps\tetris-core\include\tc\modes\Standard\PlayStateNode.h" />
+    <ClInclude Include="..\tps\tetris-core\include\tc\modes\Standard\WaitStateNode.h" />
+    <ClInclude Include="..\tps\tetris-core\include\tc\TetrisHost.h" />
     <ClInclude Include="src\Command.h" />
     <ClInclude Include="src\RemoteDisplay.h" />
     <ClInclude Include="src\SenderInterface.h" />
@@ -41,6 +58,7 @@
   <ItemGroup>
     <ClCompile Include="..\tps\fmt\src\format.cc" />
     <ClCompile Include="..\tps\SerialPort\src\SerialPort.cpp" />
+    <ClCompile Include="..\tps\tetris-core\sources\tc.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\RemoteDisplay.cpp" />
     <ClCompile Include="src\SenderSerial.cpp" />
@@ -100,19 +118,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort\include;$(SolutionDir)tps\tetris-core\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort\include;$(SolutionDir)tps\tetris-core\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort\include;$(SolutionDir)tps\tetris-core\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)part-common;$(SolutionDir)tps\fmt\include;$(SolutionDir)tps\SerialPort\include;$(SolutionDir)tps\tetris-core\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

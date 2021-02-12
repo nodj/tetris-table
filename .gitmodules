@@ -6,3 +6,6 @@
 	path = tps/SerialPort
 	url = https://github.com/nodj/SerialPort.git
 	branch = nodj-tetris-projects-edits
+[submodule "tetris-core"]
+	path = tps/tetris-core
+	url = https://github.com/nodj/tetris-core.git

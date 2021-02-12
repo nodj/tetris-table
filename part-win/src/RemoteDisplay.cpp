@@ -1,4 +1,4 @@
-// johan.duparc
+// This file is part of the tetris-table project. Copyright (c) Johan Duparc.
 
 #include "RemoteDisplay.h"
 #include "SenderSerial.h"
