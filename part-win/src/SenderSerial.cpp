@@ -18,7 +18,8 @@ struct
 {
 	bool printTrashedBytes = false;
 	int silentMsThreshold = 2;
-	bool printCmdChars = true;
+	bool printCmdChars = false;
+	bool printCmds = false;
 	bool printAlphaChars = true;
 	bool queueAlphaChars = false;
 } gConfig;
@@ -148,17 +149,20 @@ void SenderSerial::ProcessReceivedCommand(const std::vector<uint8_t>& cmd)
 {
 	if (cmd.size() == 2 && cmd[0] == 'R') // consumer Rx byte count
 	{
-		fmt::print(fmt::fg(fmt::color::green), "received 'R' cmd. fba {} -> {}\n", freeByteAvailable, freeByteAvailable+cmd[1]);
+		if (gConfig.printCmds)
+			fmt::print(fmt::fg(fmt::color::green), "received 'R' cmd. fba {} -> {}\n", freeByteAvailable, freeByteAvailable+cmd[1]);
 		freeByteAvailable += cmd[1];
 	}
 	else if (cmd.size() == 2 && cmd[0] == 'S') // setup. buffer size
 	{
-		fmt::print(fmt::fg(fmt::color::green), "Setup command received:\n\tRx buffer: {} bytes", cmd[1]);
+		if (gConfig.printCmds)
+			fmt::print(fmt::fg(fmt::color::green), "Setup command received:\n\tRx buffer: {} bytes", cmd[1]);
 		freeByteAvailable = cmd[1];
 	}
 	else if (cmd.size() == 3 && cmd[0] == 'F') // setup. buffer size
 	{
-		fmt::print(fmt::fg(fmt::color::green), "Frame Ack received:\n\tRx buffer: {} bytes", cmd[1]);
+		if (gConfig.printCmds)
+			fmt::print(fmt::fg(fmt::color::green), "Frame Ack received:\n\tRx buffer: {} bytes", cmd[1]);
 
 		if (cmd[2])
 			fmt::print(fmt::fg(fmt::color::red), " (unread:{})", cmd[2]);
