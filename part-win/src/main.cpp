@@ -71,22 +71,23 @@ int main()
 			remote.SetPixel(3+b, {uint8_t(100 * (i>>b & 1)),  0,  10});
 	};
 
+	auto patern_binaryClock = [&](int count, int ms)
+	{
+		for (int i = 0; i < count; ++i)
+		{
+			remote.FrameBegin();
+			if (i==0) remote.Clear();
+			patern3(i);
+			remote.FrameEnd();
+			sleepms(ms);
+		}
+	};
+
 	if (remote.Connect())
 	{
 		while (true)
 		{
-// 			patern1(); // animated
-// 			patern2(); // static
-// 			patern2(); // should not blink
-
-			for (int i = 0; i < 1<<16; ++i)
-			{
-				remote.FrameBegin();
-				if (i==0) remote.Clear();
-				patern3(i);
-				remote.FrameEnd();
-				sleepms(50);
-			}
+			patern_binaryClock(1 << 8, 50);
 		}
 	}
 }
